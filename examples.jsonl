@@ -1,0 +1,156 @@
+{"text": "what is the weather in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "check the weather in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "show me the weather for {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "give me the forecast for {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "tell me the current temperature in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "how warm is it in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "is it raining in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "will I need an umbrella in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "what is the forecast for {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "look up the weather in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "I need the weather for {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "could you check conditions in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "how cold is it in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "is it sunny in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "tell me about the weather in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "what temperature is it in {city}", "tool": "get_weather", "arguments": {"city": "{city}"}}
+{"text": "show the weather for {city} in fahrenheit", "tool": "get_weather", "arguments": {"city": "{city}", "unit": "fahrenheit"}}
+{"text": "what is the temperature in {city} in fahrenheit", "tool": "get_weather", "arguments": {"city": "{city}", "unit": "fahrenheit"}}
+{"text": "show the weather for {city} in celsius", "tool": "get_weather", "arguments": {"city": "{city}", "unit": "celsius"}}
+{"text": "what is the temperature in {city} in celsius", "tool": "get_weather", "arguments": {"city": "{city}", "unit": "celsius"}}
+{"text": "set a timer for {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "start a timer for {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "begin a countdown for {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "count down {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "please time {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "give me a timer for {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "I need a countdown of {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "could you set a timer for {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "start counting down from {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "run a timer for {seconds}", "tool": "set_timer", "arguments": {"seconds": "{seconds}"}}
+{"text": "set a timer for 30 seconds", "tool": "set_timer", "arguments": {"seconds": 30}}
+{"text": "start a timer for five minutes", "tool": "set_timer", "arguments": {"seconds": 300}}
+{"text": "begin a 10 minute countdown", "tool": "set_timer", "arguments": {"seconds": 600}}
+{"text": "time one hour", "tool": "set_timer", "arguments": {"seconds": 3600}}
+{"text": "give me two minutes on the timer", "tool": "set_timer", "arguments": {"seconds": 120}}
+{"text": "count down sixty seconds", "tool": "set_timer", "arguments": {"seconds": 60}}
+{"text": "I need a 15 second timer", "tool": "set_timer", "arguments": {"seconds": 15}}
+{"text": "set the countdown to twenty minutes", "tool": "set_timer", "arguments": {"seconds": 1200}}
+{"text": "start a three hour timer", "tool": "set_timer", "arguments": {"seconds": 10800}}
+{"text": "please set a timer for 45 seconds", "tool": "set_timer", "arguments": {"seconds": 45}}
+{"text": "cancel the timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "stop the countdown", "tool": "cancel_timer", "arguments": {}}
+{"text": "turn off the timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "clear the active timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "remove the timer I started", "tool": "cancel_timer", "arguments": {}}
+{"text": "please cancel my timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "end the countdown now", "tool": "cancel_timer", "arguments": {}}
+{"text": "shut off that timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "I no longer need the timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "get rid of the current countdown", "tool": "cancel_timer", "arguments": {}}
+{"text": "abort the countdown", "tool": "cancel_timer", "arguments": {}}
+{"text": "delete the running timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "cancel that countdown please", "tool": "cancel_timer", "arguments": {}}
+{"text": "stop timing this", "tool": "cancel_timer", "arguments": {}}
+{"text": "switch off my timer", "tool": "cancel_timer", "arguments": {}}
+{"text": "the timer can be cancelled now", "tool": "cancel_timer", "arguments": {}}
+{"text": "discard the countdown", "tool": "cancel_timer", "arguments": {}}
+{"text": "finish the timer early", "tool": "cancel_timer", "arguments": {}}
+{"text": "please clear my countdown", "tool": "cancel_timer", "arguments": {}}
+{"text": "never mind the timer, cancel it", "tool": "cancel_timer", "arguments": {}}
+{"text": "play {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "please play {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "could you play {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "put on {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "listen to {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "I want to hear {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "start playing {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "play some {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "put some {query} on", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "play music by {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "play songs from {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "I would like to listen to {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "can you put on {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "start the playlist {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "play the album {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "play the song {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "let me hear {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "play something by {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "I am in the mood for {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "please put on music by {query}", "tool": "play_music", "arguments": {"query": "{query}"}}
+{"text": "pause the music", "tool": "pause_music", "arguments": {}}
+{"text": "stop playing music", "tool": "pause_music", "arguments": {}}
+{"text": "pause playback", "tool": "pause_music", "arguments": {}}
+{"text": "put the music on pause", "tool": "pause_music", "arguments": {}}
+{"text": "please pause this song", "tool": "pause_music", "arguments": {}}
+{"text": "stop the song for a moment", "tool": "pause_music", "arguments": {}}
+{"text": "hold the music", "tool": "pause_music", "arguments": {}}
+{"text": "pause what is playing", "tool": "pause_music", "arguments": {}}
+{"text": "I need the music paused", "tool": "pause_music", "arguments": {}}
+{"text": "stop the current track", "tool": "pause_music", "arguments": {}}
+{"text": "pause that playlist", "tool": "pause_music", "arguments": {}}
+{"text": "could you pause the player", "tool": "pause_music", "arguments": {}}
+{"text": "let us pause the album", "tool": "pause_music", "arguments": {}}
+{"text": "stop the music please", "tool": "pause_music", "arguments": {}}
+{"text": "take a break from playing music", "tool": "pause_music", "arguments": {}}
+{"text": "pause the track now", "tool": "pause_music", "arguments": {}}
+{"text": "put playback on hold", "tool": "pause_music", "arguments": {}}
+{"text": "please stop playing this song", "tool": "pause_music", "arguments": {}}
+{"text": "silence the music for now", "tool": "pause_music", "arguments": {}}
+{"text": "pause my music player", "tool": "pause_music", "arguments": {}}
+{"text": "make a note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "create a note saying {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "write this down: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "save a note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "note that {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "take a note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "jot down {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "save this as a note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "please record a note saying {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "write a note with the text {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "I need a note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "add a new note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "put this in my notes: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "remember this in a note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "create a new note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "please take down this note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "store a note saying {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "make me a note about {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "keep a written note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "save the following note: {text}", "tool": "create_note", "arguments": {"text": "{text}"}}
+{"text": "hello there", "tool": null, "arguments": {}}
+{"text": "thank you very much", "tool": null, "arguments": {}}
+{"text": "tell me a joke", "tool": null, "arguments": {}}
+{"text": "what is the capital of France", "tool": null, "arguments": {}}
+{"text": "explain how a rainbow forms", "tool": null, "arguments": {}}
+{"text": "translate hello into Spanish", "tool": null, "arguments": {}}
+{"text": "solve this arithmetic problem", "tool": null, "arguments": {}}
+{"text": "I am reading a novel", "tool": null, "arguments": {}}
+{"text": "nothing to do right now", "tool": null, "arguments": {}}
+{"text": "please do nothing", "tool": null, "arguments": {}}
+{"text": "do not play music", "tool": null, "arguments": {}}
+{"text": "don't play jazz", "tool": null, "arguments": {}}
+{"text": "do not pause the music", "tool": null, "arguments": {}}
+{"text": "don't stop the song", "tool": null, "arguments": {}}
+{"text": "do not set a timer", "tool": null, "arguments": {}}
+{"text": "don't start a five minute countdown", "tool": null, "arguments": {}}
+{"text": "do not cancel the timer", "tool": null, "arguments": {}}
+{"text": "don't stop the countdown", "tool": null, "arguments": {}}
+{"text": "do not create a note", "tool": null, "arguments": {}}
+{"text": "don't write anything down", "tool": null, "arguments": {}}
+{"text": "do not check the weather", "tool": null, "arguments": {}}
+{"text": "don't look up the forecast", "tool": null, "arguments": {}}
+{"text": "I already checked the weather", "tool": null, "arguments": {}}
+{"text": "I cancelled the timer myself", "tool": null, "arguments": {}}
+{"text": "I wrote a note yesterday", "tool": null, "arguments": {}}
+{"text": "the music stopped a while ago", "tool": null, "arguments": {}}
+{"text": "we were talking about jazz music", "tool": null, "arguments": {}}
+{"text": "this book mentions a countdown timer", "tool": null, "arguments": {}}
+{"text": "the word forecast has eight letters", "tool": null, "arguments": {}}
+{"text": "explain what a timer is", "tool": null, "arguments": {}}
+{"text": "what does pause mean", "tool": null, "arguments": {}}
+{"text": "how does music streaming work", "tool": null, "arguments": {}}
+{"text": "tell me how weather forecasts are made", "tool": null, "arguments": {}}
+{"text": "I wonder why people take notes", "tool": null, "arguments": {}}
+{"text": "I cannot decide whether to play music or set a timer", "tool": null, "arguments": {}}
+{"text": "maybe a note or maybe a weather report, I have not decided", "tool": null, "arguments": {}}

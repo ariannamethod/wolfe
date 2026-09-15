@@ -1,0 +1,111 @@
+{
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get the current weather forecast for a named city, optionally choosing the temperature unit.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "type": "string",
+            "description": "City or place whose weather is requested."
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "celsius",
+              "fahrenheit"
+            ],
+            "default": "celsius",
+            "description": "Temperature scale."
+          }
+        },
+        "required": [
+          "city"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_timer",
+      "description": "Start a countdown timer for a requested duration.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 86400,
+            "description": "Countdown duration, expressed in seconds.",
+            "x-unit": {
+              "second": 1,
+              "seconds": 1,
+              "minute": 60,
+              "minutes": 60,
+              "hour": 3600,
+              "hours": 3600
+            }
+          }
+        },
+        "required": [
+          "seconds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cancel_timer",
+      "description": "Cancel the active countdown timer before it finishes.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "play_music",
+      "description": "Play music matching the requested artist, song, album, genre, or playlist.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Requested music, copied from the request."
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "pause_music",
+      "description": "Pause the music that is currently playing.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_note",
+      "description": "Save the requested text as a new note.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Contents of the note, copied from the request."
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
