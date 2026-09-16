@@ -2,6 +2,123 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-16 — a second association survives beside the first
+
+At Oleg's request, step 2 was committed and pushed as
+[`4531cd5`](https://github.com/ariannamethod/wolfe/commit/4531cd5f43e9c080aa6098a6764e4d91067c49b6),
+with a unique `Quote:` and `Method:` line. Before continuing, its source hashes,
+selection returns, paired evaluation returns, and full restart table were
+rechecked from the files. All agreed with the previous report.
+
+The next mechanism was declared in [STEP3.md](STEP3.md) before new candidates
+or episodes: inherit the selected memory, use old training visitation to pick
+one uncorrected context, and let new game returns select its action. A separate
+reader checked the contract and implementation before the run.
+
+Only the parent's old selection seeds 101–108 chose the context. Among their
+615 decisions, the already corrected high-health center context had 208 visits
+and was excluded. `healthmid ammopresent sceneempty` had the largest remaining
+count, 154. Of these, 118 came from two episodes. Seed 108 repeated its existing
+`strafe_right` decision 73 times without changing its viewing angle; health
+fell from 64 to 12 and kills stayed at one. Visitation identifies a place to
+intervene, not a causal verdict on individual actions.
+
+The old trajectories also exposed a separate observation limitation: 182 of
+208 high-health center observations focused on Blood or BulletPuff labels.
+These effects can sustain shooting after an enemy dies. Perception was kept
+unchanged for this experiment; its limitations remain visible in the receipts.
+
+Command, run once:
+
+```sh
+.venv/bin/python experience.py continue --previous runs/memory1 --output runs/memory2
+```
+
+Each of six children inherited a separate copy of the same parent memory and
+added one correction. Selection on seeds 301–308 produced:
+
+| Candidate second association | Return sum |
+| --- | ---: |
+| Unmodified parent | 5 |
+| turn_left | 5 |
+| turn_right | 2 |
+| move_forward | 3 |
+| strafe_left | 5 |
+| strafe_right | 5 |
+| shoot | 6 |
+
+The unique winner was `shoot`, by one reward point. Selection was sealed before
+opening evaluation seeds. The aggregate win includes selection regressions:
+seed 303 falls from return 1 to 0, and seed 305 from 3 to 2. The selected
+memory contains exactly these records:
+
+```json
+[
+  {"text":"healthhigh ammopresent scenecenter","tool":"shoot","arguments":{}},
+  {"text":"healthmid ammopresent sceneempty","tool":"shoot","arguments":{}}
+]
+```
+
+Selected state SHA-256:
+`7342b16ea85139e4d19979984223bebecafe9e9c8b0461c86b72236aa2735005`.
+All reliability counters remain zero. The first acquired decision still calls
+`shoot`; exactly one other choice changes, mid-health empty from `strafe_right`
+to `shoot`. All 24 complete responses match after process restart. The shared
+C field is rebuilt through its existing correction API; core code is unchanged.
+
+Evaluation seeds 401–416, in order, produced paired reward differences:
+
+```text
+seed:   401 402 403 404 405 406 407 408 409 410 411 412 413 414 415 416
+delta:   +1   0  +1   0   0   0   0   0  +1  +1  +1   0  +1   0   0  +1
+```
+
+| Evaluation measure | Parent | Selected child |
+| --- | ---: | ---: |
+| Total reward | 4 | 11 |
+| Kills | 19 | 18 |
+| Deaths | 15 | 7 |
+| Reached the fixed 128-decision horizon alive | 1 | 9 |
+
+Seven returns improve, nine tie, none worsen; paired mean difference +0.4375.
+The benefit is fewer deaths within the fixed horizon, with one fewer kill.
+Seed 415 exposes the tradeoff: the parent kills two and dies, while the child
+kills one and reaches the horizon alive; both receive reward +1. This is not
+an improvement on every possible measure.
+
+Raw paired behavior on seed 401 is identical through the state before decision
+42, tic 178: health 68, ammo 15, angle 0, kills 1, input
+`healthmid ammopresent sceneempty`. Then:
+
+```text
+parent decision 42: strafe_right; tic 178 -> 182
+child  decision 42: shoot;        tic 178 -> 182
+child  decision 43: shoot; ammo 15 -> 14; kills remain 1
+parent decision 107: health 8 -> -16; dead=true; total reward 0
+child  decision 127: health 8; ammo 0; dead=false; total reward 1
+```
+
+The child's final real frame shows a nearby wall, not a demonstration of
+competent navigation. It has spent all ammunition in that episode. On seed
+406 both policies still die: the child lasts longer but earns the same return.
+All these behaviors remain in the raw evidence.
+
+Both declared gates pass: accumulated memory retains the first decision and
+survives restart; the selected child improves the declared reward comparison
+on fresh seeds. The result is bounded to this scenario and horizon. It does
+not establish self-play or open-ended learning, and the kill count decreased.
+
+All 88 episodes and 9,190 decisions are preserved in `runs/memory2/`, alongside
+context counts, candidate memories, full tables, selection, and evaluation.
+An independent reader reconstructed observations from raw labels and variables,
+checked every full response against its frozen C table and literal buttons,
+and recomputed trajectories, tics, reward, kills, and deaths. The same-action
+control reproduces all eight parent selection histories. Selection and restart
+precede evaluation; both gates and the survival/kill tradeoff were confirmed.
+The complete 792-file inventory of `runs/memory1/` remains byte-identical, with
+no added or removed files. No second context, perception change, or further
+generation was attempted after the result. Return the turn to Oleg.
+
 ## 2026-09-16 — one remembered association selected by game consequences
 
 Step 1 was committed and pushed at Oleg's request as

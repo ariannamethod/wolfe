@@ -125,4 +125,31 @@ The first complete experiment is preserved locally in `runs/memory1/`, with
 all 88 episodes, including both evaluation regressions. Its raw transitions,
 full paired returns, and limitations are in [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md).
 
+## Accumulate one additional memory
+
+[STEP3.md](STEP3.md) tests one more association inherited alongside the first:
+
+```sh
+.venv/bin/python experience.py continue --previous runs/my-memory-experiment \
+  --output runs/my-second-memory
+```
+
+This declared step requires the exact selected parent-state hash recorded in
+STEP3. It reads only that parent's old selection trajectories, chooses the
+most visited observation without an existing correction, and freezes that
+choice before new games. Each of six children inherits the same first memory
+and adds one candidate correction. Selection uses seeds 301–308; the chosen
+child then faces its parent on seeds 401–416. The old corrected decision must
+survive, as must the complete response table after process restart.
+
+The command runs one generation and stops. Its mechanism and benefit verdicts
+are separate. Perception, tools, initial corpus, and game reward stay fixed.
+
+The first continuation retained the initial correction and selected a second
+one. On its 16 new evaluation seeds, reward improved in seven cases and tied
+in nine. Deaths fell from 15 to 7 within the fixed horizon; kills fell from 19
+to 18. Both corrections survived restart. Full results and raw examples,
+including wasted ammunition and remaining perception limits, are recorded in
+[WOLFEDOOMLOG.md](WOLFEDOOMLOG.md); local artifacts are in `runs/memory2/`.
+
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).
