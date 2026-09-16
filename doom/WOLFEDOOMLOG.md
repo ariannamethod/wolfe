@@ -2,6 +2,151 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — the left-object reaction breaks the observed aiming loop
+
+At Oleg's request, the preceding two steps were committed and pushed to main:
+[`ce48fdc`](https://github.com/ariannamethod/wolfe/commit/ce48fdcd3dbe2b8bf77cec8847647d383d310057)
+preserves the failed perception intervention;
+[`76a3c71`](https://github.com/ariannamethod/wolfe/commit/76a3c71fb5d5be5963e571cf5c13821bde87a75f)
+records the inherited adaptation. Each commit contains unique Quote and Method
+lines, and its experimental sources match the corresponding original receipt.
+
+The incoming independent audit examined the adapted parent's training seeds
+601–608 before new work: 828 decisions, 104 overlapping A-B-A windows and
+99 B-A-B windows, with the same focus object at both B observations in 95.
+Here A is `healthhigh ammopresent sceneempty`, B is
+`healthhigh ammopresent sceneleft`. On seed 601, decisions 5–8 alternate
+turn_left/turn_right, holding position while the angle returns between
+19.33594 and 33.39844 degrees. The visible Demon has the same id, 3.
+This confirms the loop Oleg and chat Astra proposed investigating. A was an
+acquired correction; B was still a random-prior association.
+
+[STEP6.md](STEP6.md) was declared before candidates or new games. It allows
+replacing A and adding B in a descendant, while preserving the first two
+correction records and every other runtime decision. The existing C correction
+API already supports replacement; no C change was required. A separate reader
+checked the new `joint.py` implementation before the single command:
+
+```sh
+.venv/bin/python joint.py --previous runs/adaptation1 \
+  --legacy-memory runs/perception1/memory.json --output runs/joint1
+```
+
+All 36 proposals realize both requested calls, keep the other 22 decisions
+fixed, contain exactly the expected four correction records, and retain zero
+feedback counters. Each starts from an identical three-correction parent.
+All proposals and complete response tables are retained, including poor ones.
+
+Selection returns, summed over seeds 801–808; rows are A, columns B:
+
+| A / B | turn_left | turn_right | move_forward | strafe_left | strafe_right | shoot |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| turn_left | 35 | 5 | 6 | **50** | 13 | 12 |
+| turn_right | 7 | 7 | 7 | 8 | 6 | 7 |
+| move_forward | 0 | 0 | 0 | 0 | 0 | 0 |
+| strafe_left | 2 | 2 | 2 | 2 | 2 | 2 |
+| strafe_right | 7 | 7 | 7 | 7 | 7 | 8 |
+| shoot | 3 | 4 | 2 | 3 | 2 | 2 |
+
+The unmodified parent scores 5. The parent-matching turn_left/turn_right
+control reproduces its behavior. The unique maximum is turn_left/strafe_left;
+selection was sealed before evaluation. The winner keeps A unchanged and
+changes only B from turn_right to strafe_left. Joint search was permitted,
+but this outcome does not demonstrate that revising both associations was
+necessary. Its state hash is
+`ef1a98d8093aac0c8eed9c82d4903ab6fab9656e222a9a9f9258760d7352d369`.
+All 24 complete responses match after a fresh-process restart. The first two
+acquired choices survive, along with the third search choice.
+
+Fresh evaluation, seeds 901–916, with unmodified reward and horizon:
+
+| Seed | Filtered parent reward | Joint child reward | Legacy reference reward |
+| --- | ---: | ---: | ---: |
+| 901 | 2 | 2 | 1 |
+| 902 | 0 | 3 | 0 |
+| 903 | 2 | 6 | 1 |
+| 904 | 1 | 3 | 1 |
+| 905 | 1 | 5 | 0 |
+| 906 | 0 | 5 | 0 |
+| 907 | 0 | 4 | 1 |
+| 908 | 1 | 7 | 1 |
+| 909 | 0 | 7 | 1 |
+| 910 | 0 | 3 | 2 |
+| 911 | 1 | 3 | 1 |
+| 912 | 0 | 7 | 1 |
+| 913 | 1 | 7 | 1 |
+| 914 | 2 | 8 | 1 |
+| 915 | 0 | 6 | 1 |
+| 916 | 0 | 8 | 1 |
+
+| Aggregate | Filtered parent | Joint child | Legacy reference |
+| --- | ---: | ---: | ---: |
+| Reward | 11 | 84 | 14 |
+| Kills | 24 | 90 | 18 |
+| Deaths | 13 | 6 | 4 |
+| Alive at the fixed horizon | 3 | 10 | 12 |
+| Decisions | 1,595 | 1,894 | 1,957 |
+| A visits | 376 | 383 | 235 |
+| B visits | 355 | 671 | 41 |
+| A-B-A windows | 256 | 0 | 3 |
+| B-A-B windows | 245 | 0 | 1 |
+| Same-object B-A-B windows | 240 | 0 | 1 |
+| A-B-A per 100 decisions | 16.0502 | 0 | 0.1533 |
+
+The mechanism and predeclared reward-benefit gates pass: 15 improvements,
+zero regressions, one tie against the filtered parent; mean paired difference
++4.5625. Against legacy, all 16 returns improve, mean difference +4.375.
+Legacy remains a separate reference, never a selection or adoption criterion.
+
+The observed alternating windows disappear despite more visits to both
+contexts. Raw seed 901 shows what replaces them:
+
+```text
+decisions 3–5: empty -> turn_left; angle 0 -> 33.39844
+decision 6: Demon id 3 at screen x=0, width=11 -> strafe_left
+  angle stays 33.39844; position (0,0) -> (-3.75922,5.69835)
+decisions 7–18: same Demon remains left -> strafe_left
+  its screen center advances from x=4.5 to x=101.5
+decision 19: same Demon reaches center (x=113,width=28) -> shoot
+decision 20: shoot; kills 1 -> 2, ammo 25 -> 24, reward +1
+decision 21: empty -> turn_left; search resumes
+```
+
+The existing centered-object shoot choice now follows lateral movement.
+These traces support resolution of this particular high-health aiming loop
+on the measured seeds, not general aiming competence. No short-history
+feature was needed for this step; no claim is made about all perceptual aliases.
+
+Survival is substantially better than the current filtered parent's, but
+**has not recovered the legacy sample's level**: six deaths versus four.
+Reward ties and gains still hide survival losses. On seed 901, the parent
+survives with two kills; the child gets three kills and dies, leaving equal
+reward 2. On seeds 904, 907, 910, and 911, the child dies where legacy survives;
+on 905 and 906 it survives where legacy dies.
+
+Seed 901 also exposes a remaining boundary. Health falls 76 -> 72 at decision
+60 while the Demon is still left. At 61 the unchanged mid-health left choice
+switches to shoot. Decisions 63–71 fire with an empty filtered scene, preserving
+the angle while health eventually falls 46 -> 12; decision 72 dies during the
+low-health strafe_right choice. This is an observed failure sequence, not proof
+that one later correction would cure all six deaths. At the other extreme,
+seed 914 reaches the 128-decision horizon with eight kills and health 84;
+its actual final image is `runs/joint1/evaluation/selected/seed914/frame_128.png`.
+
+All 344 real episodes and 32,757 decisions are retained in `runs/joint1/`.
+The 2,955 prior artifact/source files remain byte-identical, with no additions
+or removals in their sealed directories. C source, library, tools, original
+corpus, perception, reward, and action timing retain their declared hashes.
+An independent reader reconstructed all 344 episodes from raw records, checking
+focus/input, full C responses, buttons, state continuity, tics, rewards, and
+all structural/restart conditions. The parent-matching control reproduces all
+eight parent selection histories. Its new `independent-audit.json` confirms
+the selection, fresh comparisons, loop counts, and survival counterexamples
+without changing any existing evidence; no discrepancies were found.
+No additional pair, generation, reward change, or history feature was tried
+after evaluation. The passed step returns to Oleg with the survival deficit
+and all six deaths visible.
+
 ## 2026-09-16 — inherited memory adapts to the filtered scene
 
 Oleg authorized continuing the adaptation investigation and repairing the

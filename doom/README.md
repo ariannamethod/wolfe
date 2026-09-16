@@ -227,4 +227,48 @@ Local artifacts are in `runs/adaptation1/`. To inspect the selected child:
   --perception no-effects --output runs/inspect-adaptation --seed 701
 ```
 
+## Revise two neighboring decisions together
+
+[STEP6.md](STEP6.md) jointly revisits the high-health empty-scene choice and
+the high-health left-object choice observed in an aiming loop:
+
+```sh
+.venv/bin/python joint.py --previous runs/my-adaptation \
+  --legacy-memory runs/my-perception-comparison/memory.json \
+  --output runs/my-joint-search
+```
+
+It constructs all 36 action pairs from separate copies of the three-correction
+parent. Each proposal must realize its requested calls while preserving the
+other 22 decisions before it can enter game selection. Every proposal and any
+eligibility failure are preserved. One previously acquired correction may be
+revised in a descendant; the original parent and experience remain intact.
+
+Selection uses the same episode reward on seeds 801–808, with the unchanged
+parent winning ties. Evaluation on 901–916 compares the chosen child, current
+parent, and older legacy reference. The report includes alternating-context
+windows and their rates, kills, deaths, and survival through the fixed horizon.
+These measurements expose whether joint selection helps the observed loop or
+survival; they do not add a hidden selection bonus.
+
+The first grid admitted all 36 proposals. Reward selected
+`sceneempty → turn_left`, `sceneleft → strafe_left` in the two high-health,
+ammo-present contexts. Thus the winning pair retained the acquired search
+turn and changed only the left-object reaction. This experiment does not
+establish that changing both decisions jointly was necessary.
+
+On the 16 fresh seeds, the child improved reward in 15 cases and tied one.
+Total reward rose from 11 to 84, kills from 24 to 90, and deaths fell from 13
+to 6. The measured empty-left-empty and left-empty-left windows both fell to
+zero. Raw sequences show lateral movement bringing the object into the center,
+where the existing shoot association takes over.
+
+The older legacy reference scored 14 reward, 18 kills, and four deaths on
+these same seeds. Its survival was **not recovered**: the child survived the
+fixed horizon in 10 episodes, versus 12 for legacy. Seed 901 also exposes a
+reward tie that hides a survival regression against the current parent.
+All 344 episodes, 32,757 decisions, proposals, and restart evidence remain
+locally in `runs/joint1/`; see [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md) for raw behavior
+and remaining failures. No history token, new reward, or C-core change was used.
+
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).
