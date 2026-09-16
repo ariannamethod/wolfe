@@ -15,6 +15,10 @@ improved in 14 cases and worsened in two; kills increased from 4 to 19 in total.
 The selected player still died in 14 episodes. This is a small improvement on
 one fixed scenario, under game-provided symbolic perception.
 
+Two actual frames from the later joint-memory experiment are shown in the
+[main README](../README.md#doom-experiment), with their
+[source episode and hashes](../assets/doom/README.md).
+
 ## Run
 
 From this directory, with Python 3.10+ and a C99 compiler:

@@ -274,11 +274,22 @@ meant, what belongs in its arguments, and when the evidence is insufficient.
 ## Doom experiment
 
 [The Doom adapter](doom/README.md) connects the existing C engine to a real
-ViZDoom player through six primitive tools. Two bounded experiments select
-and accumulate persistent example corrections using game reward. The latest
-reduces deaths from 15 to 7 across 16 fresh episodes, with kills falling from
-19 to 18. The initial prior, raw behavior, and limitations are documented;
+ViZDoom player through six primitive tools. Bounded experiments select
+persistent example corrections using game reward. The latest searched 36
+neighboring action pairs: on 16 fresh seeds, kills rose from 24 to 90 and
+deaths fell from 13 to 6 against its immediate parent. An older perception
+mode still survived more often, with four deaths on those same seeds.
+The initial prior, raw behavior, and limitations are documented;
 multiplayer self-play remains unexplored.
+
+| After 16 calls: moving left with the monster in view | After 128 calls: eight kills, health 84 |
+| --- | --- |
+| ![WOLFE strafing left past a visible monster](assets/doom/joint-seed914-016.png) | ![WOLFE firing at the end of the recorded episode](assets/doom/joint-seed914-128.png) |
+
+Actual, unedited frames from the same ViZDoom/Freedoom episode, seed 914,
+under the selected four-correction memory. The second frame reaches the
+fixed observation horizon; it is not completion of the game.
+[Frame provenance](assets/doom/README.md) · [Experiment log](doom/WOLFEDOOMLOG.md).
 
 ## Family
 

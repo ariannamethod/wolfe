@@ -2,6 +2,24 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — publish the joint-memory step and two actual game frames
+
+Oleg authorized publishing STEP6, adding two screenshots to the README, and
+continuing the investigation. The sealed sources, protocol, inherited inputs,
+and selected memory were checked before committing STEP6 as `873c09f`.
+
+The main README now shows two unedited 320 × 240 frames from the same selected
+evaluation episode, seed 914, copied byte-for-byte into `assets/doom/`.
+After 16 calls the player has one kill and health 100; after 128 calls it has
+eight kills and health 84. The frame source, action indices, state hash, and
+image hashes are recorded in `assets/doom/README.md`. The captions distinguish
+the fixed horizon from game completion. These frames illustrate one success;
+the six evaluation deaths remain in the experiment record.
+
+Only existing gameplay images were copied; no new episodes were run for the
+screenshots. Both relative README image links and exact source-image equality
+were checked. No video or generated artwork was introduced.
+
 ## 2026-09-17 — the left-object reaction breaks the observed aiming loop
 
 At Oleg's request, the preceding two steps were committed and pushed to main:
