@@ -4,7 +4,9 @@
 
 > I solve problems.
 
-A neural tool caller. One C file. Zero pretrained parameters.
+A neural tool calling model. One C file. Zero pretrained parameters.
+
+**WOLFE** can now remember your corrections and live inside your C program.
 
 The model files are text. You can read them. You can edit them. WOLFE rebuilds
 its numerical field from them when it starts. There is no checkpoint to download,
@@ -108,8 +110,11 @@ tool units. Those units feed back into the semantic context and settle through
 six nonlinear recurrent steps with lateral inhibition — **destiny**. A no-call
 unit competes alongside the functions.
 
-The settled field selects the tool. Generic span alignment then fills arguments;
-ordinary code validates and serializes them. A malformed brace is not a deep
+Ordered subject/modal prefixes are compared with the supplied examples, so
+"I listen" does not get the same evidence as "please play" just because both
+mention music. The settled field selects the tool. Argument spans then compete
+on their own evidence, including the option that a required value is missing.
+Ordinary code validates and serializes them. A malformed brace is not a deep
 thought.
 
 Concrete argument values in construction examples are replaced by slots before
@@ -123,41 +128,81 @@ tool attractors are rebuilt from the definitions. Neither is gradient-trained.
 
 PostGPT and Q are the ancestors, not dependencies. WOLFE borrows their
 corpus-to-field idea and gives it a smaller output language. See
-[the engineering record](docs/ENGINEERING.md) for the implementation decisions.
+[the v2 engineering record](docs/V2_ENGINEERING.md) and
+[the original field equations](docs/ENGINEERING.md).
 
 ## Reasoning you can point at
 
+Off by default. Two ways to turn it on:
+
 ```sh
+./wolfe --reasoning-compact 'play music by Portishead'
 ./wolfe --reasoning 'play music by Portishead'
 ```
 
-This adds actual evidence: competing tool scores, the strongest example,
-matched input spans, ordered-pair evidence, the activation trajectory, and the
-source of each argument. For the request above, the useful part is `play music
-by` → `play_music`, with `Portishead` copied from the input.
+Compact mode shows the winning function, matched words, argument values and
+sources, and the winning margin. Here the evidence is `play`, `music`, `by`;
+`Portishead` comes from input bytes `[14,24]`. Full mode adds all tool candidates,
+related examples, ordered-pair evidence, the activation trajectory, and competing
+argument scores. Absent required arguments have their own diagnostics.
 
-It is an inspection of the computation, not a generated internal monologue.
-Span offsets are UTF-8 **byte offsets**. `--reasoning` does not change the call.
+These are computed observations. No extra model writes a story about them.
+Both options leave the selected call unchanged. Span offsets are UTF-8 **bytes**.
+In Python use `reasoning="compact"` or `reasoning=True`.
 
 ## State with a job
 
-Normal inference does not write anything. Optional feedback keeps two bounded
-counters per tool:
+Normal inference does not write anything. You can explicitly correct a result.
+Put this in `correction.json`:
+
+```json
+{"text":"time for quiet","tool":"pause_music","arguments":{}}
+```
+
+Then:
+
+```sh
+./wolfe --state user.state.json --correct correction.json
+./wolfe --state user.state.json 'time for quiet'
+```
+
+WOLFE retains at most **32 explicit corrections** and reconstructs its field
+from them. The record replaces any original examples with that exact text;
+otherwise it is another example in the field. Correcting the same text replaces
+its record; a new record at capacity evicts the oldest. Use `"tool":null` with
+empty arguments to teach no-call. Named tools need complete, schema-valid
+arguments. Explicitly supplied values may come from you instead of the query;
+their source is shown as `correction`.
+
+This is inspectable example memory. There is no optimizer, gradient update or
+training command. Predictions never turn into their own ground truth.
+
+Optional acceptance/rejection keeps two bounded counters per tool, modestly
+adjusting its reliability multiplier:
 
 ```sh
 ./wolfe --state user.state.json --feedback accepted 'play Rammstein'
 ./wolfe --state user.state.json --feedback rejected 'play Rammstein'
-./wolfe --state user.state.json 'play Portishead'
 ```
 
-Explicit acceptance/rejection modestly adjusts a tool's reliability multiplier.
-WOLFE never treats its own prediction as confirmation. Counters are halved at
-saturation; the file is replaced atomically and tied to the exact definition
-bytes. Delete it to restore the original field. After editing definitions,
-start with a new state file.
+The state file is replaced atomically and tied to the exact definition bytes.
+Delete it and reload to restore the base field. After editing definitions, use a
+new state file. Version-1 counter files remain readable. Keep one writer per
+state file. Neither these counters nor argument evidence turn activation scores
+into calibrated probabilities.
 
-This is a small feedback bias, not evidence of calibrated probabilities or
-continuous semantic learning. It is not a training mode.
+## Give it a home in C
+
+```c
+#define WOLFE_NO_MAIN
+#include "wolfe.c"
+```
+
+Load once with `wolfe_load`, reuse `wolfe_call`, explicitly correct with
+`wolfe_correct`, and release with `wolfe_free`. Calls use caller-owned JSON
+buffers and perform no file I/O. A small compiling host and the complete API
+contract are in [EMBEDDING.md](docs/EMBEDDING.md). C API operations require
+external serialization because internal error scratch is shared.
 
 ## Pipe it into something useful
 
@@ -181,13 +226,18 @@ make sanitize
 ASAN_OPTIONS=detect_leaks=0 python3 tests/fuzz_smoke.py --engine ./wolfe-sanitize
 ```
 
-The repository includes independently authored language fixtures, strict parser
-and schema contracts, arbitrary tool-vocabulary replacement, explicit-state
-contracts, randomized input checks, and C/Python parity checks. The engineering
-set guides fixes. A first blind set exposed four further errors; its original
-result is retained. After bounded repairs, a separately authored confirmation
-set is opened. Reports distinguish routing, arguments, complete responses and
-false calls. They also identify verbatim overlap with the construction corpus.
+The repository includes independently authored language fixtures, parser/schema
+contracts, unrelated tool definitions, explicit corrections, persisted-state
+validation, a real C embedding host, seeded input probes and full C/Python
+agreement checks. In v2, 80 new engineering requests guide development; another
+48 are opened only after source freeze. The original caller is preserved at
+`wolfe-v1` and evaluated on those same requests. No tuning follows the v2 blind
+result. All original release reports remain available.
+
+```sh
+make evaluate-v2
+make parity
+```
 
 Three selectable modes share the same definitions and argument machinery:
 `keyword` (literal IDF overlap), `field` (static corpus relations) and `neural`
@@ -197,11 +247,14 @@ name on the executable.
 Current measurements and remaining failures belong in [RESULTS.md](docs/RESULTS.md).
 No claim about an ARM phone or microcontroller follows from an x86 benchmark.
 
-The supplied C body compiles to **75 KiB**, peaks at **5.38 MiB RSS**, and takes
-**1.51 ms median** per warm request on the measured Linux host. The fresh
-confirmation set gives **29/32 complete responses**, including two false calls;
-the developer-visible engineering set gives 116/119. Small is measured. Perfect
-is not claimed.
+On the new blind set, v2 completes **44/48 responses**, up from **38/48** for
+v1. False calls fall from **7 to 2** among 24 requests that should emit no call.
+The corpus is unchanged. Four failures remain, including a missed indirect
+request and two weather statements misread as commands. The working engineering
+set improves from 57/80 to 74/80. The C executable is **95.63 KiB**, base peak
+RSS is **5.38 MiB**, and a warm request takes **1.51 ms median** on the measured
+x86 Linux host. Exact commands, resource measurements and every
+remaining blind error are in [RESULTS.md](docs/RESULTS.md).
 
 ## The boundary
 
@@ -215,7 +268,7 @@ properties per tool to 16, and vocabulary to 4,096 tokens. Limits are explicit
 errors, not silent truncation. Definitions are bounded to 4 MiB per file; the
 2,048-example limit includes synthetic tool-name/description examples.
 
-The wolf doesn't need to know everything. It needs to know which function you
+The wolf does not need to know everything. It needs to know which function you
 meant, what belongs in its arguments, and when the evidence is insufficient.
 
 ## Family
@@ -225,9 +278,5 @@ meant, what belongs in its arguments, and when the evidence is insufficient.
 - [Molequla](https://github.com/ariannamethod/molequla) — the ecosystem that made
   this worth building; WOLFE's starter interface is independent of it.
 - [Microkarpathy](https://github.com/ariannamethod/microkarpathy) — family manners.
-- [Cactus](https://github.com/cactus-compute/cactus) — Needle made the small
-  tool-caller question concrete. No head-to-head Needle benchmark is claimed.
 
 Named after Winston Wolfe. GPL-3.0; see [LICENSE](LICENSE).
-
-**The joke has become an architecture.**
