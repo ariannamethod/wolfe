@@ -1,0 +1,24 @@
+{"text": "Could you check the weather in Tallinn for me?", "calls": [{"name": "get_weather", "arguments": {"city": "Tallinn", "unit": "celsius"}}], "category": "final_weather"}
+{"text": "Show weather for Cape Town in Fahrenheit.", "calls": [{"name": "get_weather", "arguments": {"city": "Cape Town", "unit": "fahrenheit"}}], "category": "final_weather"}
+{"text": "What is the temperature in Valencia?", "calls": [{"name": "get_weather", "arguments": {"city": "Valencia", "unit": "celsius"}}], "category": "final_weather"}
+{"text": "Start a timer for seventeen minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 1020}}], "category": "final_timer"}
+{"text": "Set a timer for 2 hours and 5 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 7500}}], "category": "final_timer"}
+{"text": "I have 12 guests. Start a timer for 40 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 40}}], "category": "final_timer"}
+{"text": "Please cancel my countdown.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "final_cancel"}
+{"text": "Stop the running timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "final_cancel"}
+{"text": "Play the song \"Midnight City\".", "calls": [{"name": "play_music", "arguments": {"query": "Midnight City"}}], "category": "final_music"}
+{"text": "I want to listen to \"Paper Planes\".", "calls": [{"name": "play_music", "arguments": {"query": "Paper Planes"}}], "category": "final_music"}
+{"text": "Play \"Cancel the Timer\".", "calls": [{"name": "play_music", "arguments": {"query": "Cancel the Timer"}}], "category": "final_music"}
+{"text": "Please pause the track.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "final_pause"}
+{"text": "The phone is ringing; stop the music.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "final_pause"}
+{"text": "Save a note saying \"Take the red cable\".", "calls": [{"name": "create_note", "arguments": {"text": "Take the red cable"}}], "category": "final_note"}
+{"text": "Make a note: library card 9062.", "calls": [{"name": "create_note", "arguments": {"text": "library card 9062"}}], "category": "final_note"}
+{"text": "Write a note: play music after dinner.", "calls": [{"name": "create_note", "arguments": {"text": "play music after dinner"}}], "category": "final_note"}
+{"text": "Do not start a timer for 18 minutes.", "calls": [], "category": "final_negation"}
+{"text": "No music, please.", "calls": [], "category": "final_negation"}
+{"text": "I bought a new kitchen timer.", "calls": [], "category": "final_no_call"}
+{"text": "Who invented musical notation?", "calls": [], "category": "final_no_call"}
+{"text": "Show me the weather forecast.", "calls": [], "category": "final_missing", "allowed_status": ["missing_arguments"]}
+{"text": "Please start playing music.", "calls": [], "category": "final_missing", "allowed_status": ["missing_arguments"]}
+{"text": "Cancel the timer and play \"Daydreaming\".", "calls": [], "category": "final_multiple", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Create a note: buy rice. Also pause the music.", "calls": [], "category": "final_multiple", "allowed_status": ["ambiguous", "no_call"]}

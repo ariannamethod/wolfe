@@ -1,0 +1,48 @@
+{"text": "Please check the current weather for Durban.", "calls": [{"name": "get_weather", "arguments": {"city": "Durban", "unit": "celsius"}}], "category": "weather"}
+{"text": "How is the weather in Québec City?", "calls": [{"name": "get_weather", "arguments": {"city": "Québec City", "unit": "celsius"}}], "category": "unicode_argument"}
+{"text": "For Bologna, could you show the weather in Fahrenheit?", "calls": [{"name": "get_weather", "arguments": {"city": "Bologna", "unit": "fahrenheit"}}], "category": "fronted_argument"}
+{"text": "In Salvador, what is the weather like right now?", "calls": [{"name": "get_weather", "arguments": {"city": "Salvador", "unit": "celsius"}}], "category": "fronted_argument"}
+{"text": "Show the weather for \"La Paz\" in Celsius.", "calls": [{"name": "get_weather", "arguments": {"city": "La Paz", "unit": "celsius"}}], "category": "quoted_argument"}
+{"text": "The taxi arrives at 9; get the weather in Tbilisi.", "calls": [{"name": "get_weather", "arguments": {"city": "Tbilisi", "unit": "celsius"}}], "category": "irrelevant_number"}
+{"text": "Please start a timer for 11 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 660}}], "category": "timer"}
+{"text": "Start a countdown for twenty seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 20}}], "category": "number_words"}
+{"text": "I would like you to set a timer for 4 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 240}}], "category": "indirect_request"}
+{"text": "Set a timer for two minutes and five seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 125}}], "category": "compound_duration"}
+{"text": "I have 3 trays ready; set a timer for 14 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 840}}], "category": "irrelevant_number"}
+{"text": "For 90 seconds, set a timer.", "calls": [{"name": "set_timer", "arguments": {"seconds": 90}}], "category": "fronted_argument"}
+{"text": "Please play music by Nina Simone.", "calls": [{"name": "play_music", "arguments": {"query": "Nina Simone"}}], "category": "music"}
+{"text": "Put on \"The Sound of Silence\".", "calls": [{"name": "play_music", "arguments": {"query": "The Sound of Silence"}}], "category": "quoted_argument"}
+{"text": "Could you play ambient?", "calls": [{"name": "play_music", "arguments": {"query": "ambient"}}], "category": "polite_request"}
+{"text": "Play the song \"Write a Note\".", "calls": [{"name": "play_music", "arguments": {"query": "Write a Note"}}], "category": "quoted_intent"}
+{"text": "Save a note: feed the cat at 8", "calls": [{"name": "create_note", "arguments": {"text": "feed the cat at 8"}}], "category": "literal_number"}
+{"text": "Please write down \"cancel the timer, then pause the music\".", "calls": [{"name": "create_note", "arguments": {"text": "cancel the timer, then pause the music"}}], "category": "quoted_intent"}
+{"text": "Create a note: do not forget the keys", "calls": [{"name": "create_note", "arguments": {"text": "do not forget the keys"}}], "category": "literal_negation"}
+{"text": "Save this as a note: ask Zoë about the rehearsal", "calls": [{"name": "create_note", "arguments": {"text": "ask Zoë about the rehearsal"}}], "category": "unicode_argument"}
+{"text": "Could you stop the music for now?", "calls": [{"name": "pause_music", "arguments": {}}], "category": "polite_request"}
+{"text": "Please pause the currently playing music.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "paraphrase"}
+{"text": "Stop the active countdown, please.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "polite_request"}
+{"text": "I am done cooking. Please cancel the timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "irrelevant_detail"}
+{"text": "Every evening I play music by Nina Simone.", "calls": [], "category": "habit", "allowed_status": ["no_call"]}
+{"text": "I paused the music before answering the phone.", "calls": [], "category": "past_statement", "allowed_status": ["no_call"]}
+{"text": "I will cancel the timer when the bread is ready.", "calls": [], "category": "future_statement", "allowed_status": ["no_call"]}
+{"text": "My son sets a timer for 11 minutes every day.", "calls": [], "category": "habit", "allowed_status": ["no_call"]}
+{"text": "I checked the weather in Durban earlier.", "calls": [], "category": "past_statement", "allowed_status": ["no_call"]}
+{"text": "I wrote a note about the rehearsal.", "calls": [], "category": "past_statement", "allowed_status": ["no_call"]}
+{"text": "The label reads \"cancel the timer\".", "calls": [], "category": "quoted_mention", "allowed_status": ["no_call"]}
+{"text": "The title of my poem is \"Play the Song\".", "calls": [], "category": "quoted_mention", "allowed_status": ["no_call"]}
+{"text": "Please explain the expression \"pause the music\".", "calls": [], "category": "unsupported_request", "allowed_status": ["no_call"]}
+{"text": "I like music but do not want anything playing right now.", "calls": [], "category": "preference", "allowed_status": ["no_call"]}
+{"text": "Do not start a timer for 90 seconds.", "calls": [], "category": "negation", "allowed_status": ["no_call"]}
+{"text": "Please do not stop the active countdown.", "calls": [], "category": "negation", "allowed_status": ["no_call"]}
+{"text": "There is no need to get the weather in Bologna.", "calls": [], "category": "negation", "allowed_status": ["no_call"]}
+{"text": "Do not save a note about the keys.", "calls": [], "category": "negation", "allowed_status": ["no_call"]}
+{"text": "I want to learn how a countdown timer is built.", "calls": [], "category": "unsupported_request", "allowed_status": ["no_call"]}
+{"text": "Can you tell me who wrote The Sound of Silence?", "calls": [], "category": "factual_question", "allowed_status": ["no_call"]}
+{"text": "The weather in Salvador was lovely last year.", "calls": [], "category": "past_statement", "allowed_status": ["no_call"]}
+{"text": "There are two notes on the table and three songs on the album.", "calls": [], "category": "statement", "allowed_status": ["no_call"]}
+{"text": "Set the countdown timer, please.", "calls": [], "category": "missing_argument", "allowed_status": ["missing_arguments"]}
+{"text": "Could you get the weather?", "calls": [], "category": "missing_argument", "allowed_status": ["missing_arguments"]}
+{"text": "Play the album, please.", "calls": [], "category": "missing_argument", "allowed_status": ["missing_arguments"]}
+{"text": "Please save a new note.", "calls": [], "category": "missing_argument", "allowed_status": ["missing_arguments"]}
+{"text": "Cancel the timer and pause the music.", "calls": [], "category": "multiple_actions", "allowed_status": ["ambiguous"]}
+{"text": "Get the weather in Kumasi and start a timer for 50 seconds.", "calls": [], "category": "multiple_actions", "allowed_status": ["ambiguous"]}

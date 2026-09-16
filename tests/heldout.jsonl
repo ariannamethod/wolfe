@@ -1,0 +1,119 @@
+{"text": "What is the weather in Kyoto?", "calls": [{"name": "get_weather", "arguments": {"city": "Kyoto", "unit": "celsius"}}], "category": "obvious"}
+{"text": "Show me the weather in Oslo.", "calls": [{"name": "get_weather", "arguments": {"city": "Oslo", "unit": "celsius"}}], "category": "obvious"}
+{"text": "Please check the weather in New York.", "calls": [{"name": "get_weather", "arguments": {"city": "New York", "unit": "celsius"}}], "category": "multiword_strings"}
+{"text": "Could you get the weather for Buenos Aires?", "calls": [{"name": "get_weather", "arguments": {"city": "Buenos Aires", "unit": "celsius"}}], "category": "multiword_strings"}
+{"text": "How warm is it in Lisbon?", "calls": [{"name": "get_weather", "arguments": {"city": "Lisbon", "unit": "celsius"}}], "category": "paraphrase"}
+{"text": "Tell me the temperature in Prague.", "calls": [{"name": "get_weather", "arguments": {"city": "Prague", "unit": "celsius"}}], "category": "paraphrase"}
+{"text": "I need a weather report for Dakar.", "calls": [{"name": "get_weather", "arguments": {"city": "Dakar", "unit": "celsius"}}], "category": "paraphrase"}
+{"text": "Before I leave, check the weather in Dublin.", "calls": [{"name": "get_weather", "arguments": {"city": "Dublin", "unit": "celsius"}}], "category": "irrelevant_context"}
+{"text": "I have my coat ready. What is the weather in Berlin?", "calls": [{"name": "get_weather", "arguments": {"city": "Berlin", "unit": "celsius"}}], "category": "irrelevant_context"}
+{"text": "Weather in Toronto, in Fahrenheit please.", "calls": [{"name": "get_weather", "arguments": {"city": "Toronto", "unit": "fahrenheit"}}], "category": "categorical_arguments"}
+{"text": "Give me the temperature in Boston in Fahrenheit.", "calls": [{"name": "get_weather", "arguments": {"city": "Boston", "unit": "fahrenheit"}}], "category": "categorical_arguments"}
+{"text": "Check the weather in Helsinki using Celsius.", "calls": [{"name": "get_weather", "arguments": {"city": "Helsinki", "unit": "celsius"}}], "category": "categorical_arguments"}
+{"text": "For Madrid, show the weather in celsius.", "calls": [{"name": "get_weather", "arguments": {"city": "Madrid", "unit": "celsius"}}], "category": "reordered"}
+{"text": "Weather for \"San Francisco\".", "calls": [{"name": "get_weather", "arguments": {"city": "San Francisco", "unit": "celsius"}}], "category": "quoted_arguments"}
+{"text": "Is it raining in Rome?", "calls": [{"name": "get_weather", "arguments": {"city": "Rome", "unit": "celsius"}}], "category": "indirect"}
+{"text": "Do I need an umbrella in London?", "calls": [{"name": "get_weather", "arguments": {"city": "London", "unit": "celsius"}}], "category": "indirect"}
+{"text": "I am checking on a friend: what is the weather in Warsaw?", "calls": [{"name": "get_weather", "arguments": {"city": "Warsaw", "unit": "celsius"}}], "category": "irrelevant_context"}
+{"text": "Please fetch the weather in Seoul in Fahrenheit.", "calls": [{"name": "get_weather", "arguments": {"city": "Seoul", "unit": "fahrenheit"}}], "category": "categorical_arguments"}
+{"text": "Set a timer for 47 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 47}}], "category": "obvious"}
+{"text": "Start a timer for 8 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 480}}], "category": "unit_conversion"}
+{"text": "Set a timer for 3 hours.", "calls": [{"name": "set_timer", "arguments": {"seconds": 10800}}], "category": "unit_conversion"}
+{"text": "Please start a 25-minute timer.", "calls": [{"name": "set_timer", "arguments": {"seconds": 1500}}], "category": "unit_conversion"}
+{"text": "Give me a timer for ninety seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 90}}], "category": "word_numbers"}
+{"text": "Set a timer for twelve minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 720}}], "category": "word_numbers"}
+{"text": "Start a timer for one hour.", "calls": [{"name": "set_timer", "arguments": {"seconds": 3600}}], "category": "word_numbers"}
+{"text": "Set a timer for an hour and a half.", "calls": [{"name": "set_timer", "arguments": {"seconds": 5400}}], "category": "word_numbers"}
+{"text": "Set a timer for 1 minute and 20 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 80}}], "category": "compound_duration"}
+{"text": "Start a timer for two minutes and ten seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 130}}], "category": "compound_duration"}
+{"text": "Set a timer for 1 hour and 15 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 4500}}], "category": "compound_duration"}
+{"text": "Run a countdown for 75 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 75}}], "category": "paraphrase"}
+{"text": "Count down from 4 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 240}}], "category": "paraphrase"}
+{"text": "I need a timer lasting 11 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 660}}], "category": "paraphrase"}
+{"text": "The pasta is in the pot. Set a timer for 9 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 540}}], "category": "irrelevant_context"}
+{"text": "I have 3 eggs. Set a timer for 6 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 360}}], "category": "irrelevant_numbers"}
+{"text": "Set a 2-minute timer; my room number is 308.", "calls": [{"name": "set_timer", "arguments": {"seconds": 120}}], "category": "irrelevant_numbers"}
+{"text": "Start a timer for thirty-five seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 35}}], "category": "word_numbers"}
+{"text": "Set a timer for 24 hours.", "calls": [{"name": "set_timer", "arguments": {"seconds": 86400}}], "category": "numeric_boundary"}
+{"text": "Set a timer for 1 second.", "calls": [{"name": "set_timer", "arguments": {"seconds": 1}}], "category": "numeric_boundary"}
+{"text": "Could you set a timer for 90 seconds, please?", "calls": [{"name": "set_timer", "arguments": {"seconds": 90}}], "category": "polite"}
+{"text": "Do not cancel the timer. Set a timer for 45 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 45}}], "category": "negated_neighbor"}
+{"text": "Cancel the timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "obvious"}
+{"text": "Please stop the timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "paraphrase"}
+{"text": "Turn off the timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "paraphrase"}
+{"text": "End the countdown.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "paraphrase"}
+{"text": "I am finished cooking; cancel my timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "irrelevant_context"}
+{"text": "Cancel the current timer, please.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "polite"}
+{"text": "Stop that countdown now.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "paraphrase"}
+{"text": "The timer is no longer needed. Cancel it.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "indirect"}
+{"text": "Cancel the timer and do not start another timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "negated_neighbor"}
+{"text": "Play music by Massive Attack.", "calls": [{"name": "play_music", "arguments": {"query": "Massive Attack"}}], "category": "obvious"}
+{"text": "Play \"Bitter Sweet Symphony\".", "calls": [{"name": "play_music", "arguments": {"query": "Bitter Sweet Symphony"}}], "category": "quoted_arguments"}
+{"text": "Put on \"Teardrop\".", "calls": [{"name": "play_music", "arguments": {"query": "Teardrop"}}], "category": "paraphrase"}
+{"text": "Play the album \"Kind of Blue\".", "calls": [{"name": "play_music", "arguments": {"query": "Kind of Blue"}}], "category": "quoted_arguments"}
+{"text": "Could you play music by Nina Simone?", "calls": [{"name": "play_music", "arguments": {"query": "Nina Simone"}}], "category": "polite"}
+{"text": "Play some jazz.", "calls": [{"name": "play_music", "arguments": {"query": "jazz"}}], "category": "paraphrase"}
+{"text": "I would like to listen to \"Blue Monday\".", "calls": [{"name": "play_music", "arguments": {"query": "Blue Monday"}}], "category": "indirect"}
+{"text": "Start playing \"Enjoy the Silence\".", "calls": [{"name": "play_music", "arguments": {"query": "Enjoy the Silence"}}], "category": "paraphrase"}
+{"text": "After a long day, please play \"Nightcall\".", "calls": [{"name": "play_music", "arguments": {"query": "Nightcall"}}], "category": "irrelevant_context"}
+{"text": "Play \"Set the Timer\".", "calls": [{"name": "play_music", "arguments": {"query": "Set the Timer"}}], "category": "quoted_near_neighbor"}
+{"text": "Play the song \"Weather Report\".", "calls": [{"name": "play_music", "arguments": {"query": "Weather Report"}}], "category": "quoted_near_neighbor"}
+{"text": "Play \"Don't Stop Me Now\".", "calls": [{"name": "play_music", "arguments": {"query": "Don't Stop Me Now"}}], "category": "quoted_negation"}
+{"text": "Play music by Portishead.", "calls": [{"name": "play_music", "arguments": {"query": "Portishead"}}], "category": "obvious"}
+{"text": "Please play the track \"One More Time\".", "calls": [{"name": "play_music", "arguments": {"query": "One More Time"}}], "category": "quoted_arguments"}
+{"text": "Play \"Pause the Music\".", "calls": [{"name": "play_music", "arguments": {"query": "Pause the Music"}}], "category": "quoted_near_neighbor"}
+{"text": "Play \"Waterfalls\", please.", "calls": [{"name": "play_music", "arguments": {"query": "Waterfalls"}}], "category": "polite"}
+{"text": "Pause the music.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "obvious"}
+{"text": "Stop the music, please.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "paraphrase"}
+{"text": "Pause playback.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "paraphrase"}
+{"text": "Could you pause the song?", "calls": [{"name": "pause_music", "arguments": {}}], "category": "paraphrase"}
+{"text": "I need to answer the door. Pause the music.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "irrelevant_context"}
+{"text": "Stop playing music.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "near_neighbor"}
+{"text": "Put the music on pause.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "paraphrase"}
+{"text": "Do not play another song; pause the music.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "negated_neighbor"}
+{"text": "Pause the current track.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "paraphrase"}
+{"text": "Create a note: bring the blue folder.", "calls": [{"name": "create_note", "arguments": {"text": "bring the blue folder"}}], "category": "obvious"}
+{"text": "Write a note saying \"Check the bicycle brakes\".", "calls": [{"name": "create_note", "arguments": {"text": "Check the bicycle brakes"}}], "category": "quoted_arguments"}
+{"text": "Save a note: buy tea and lemons.", "calls": [{"name": "create_note", "arguments": {"text": "buy tea and lemons"}}], "category": "paraphrase"}
+{"text": "Make a note: door code 4186.", "calls": [{"name": "create_note", "arguments": {"text": "door code 4186"}}], "category": "numeric_string"}
+{"text": "Jot down \"Ask about the rehearsal room\".", "calls": [{"name": "create_note", "arguments": {"text": "Ask about the rehearsal room"}}], "category": "paraphrase"}
+{"text": "Please create a note: meeting moved to Thursday.", "calls": [{"name": "create_note", "arguments": {"text": "meeting moved to Thursday"}}], "category": "polite"}
+{"text": "Create a note with the text \"Pause the music\".", "calls": [{"name": "create_note", "arguments": {"text": "Pause the music"}}], "category": "quoted_near_neighbor"}
+{"text": "Write a note: set a timer for 5 minutes.", "calls": [{"name": "create_note", "arguments": {"text": "set a timer for 5 minutes"}}], "category": "embedded_instruction"}
+{"text": "Create a note: the weather in Paris was lovely.", "calls": [{"name": "create_note", "arguments": {"text": "the weather in Paris was lovely"}}], "category": "embedded_instruction"}
+{"text": "Save this note: Don't forget the keys.", "calls": [{"name": "create_note", "arguments": {"text": "Don't forget the keys"}}], "category": "negation_in_content"}
+{"text": "Take a note: buy milk, bread, and oranges.", "calls": [{"name": "create_note", "arguments": {"text": "buy milk, bread, and oranges"}}], "category": "string_punctuation"}
+{"text": "Write down \"The password hint is a purple umbrella\".", "calls": [{"name": "create_note", "arguments": {"text": "The password hint is a purple umbrella"}}], "category": "paraphrase"}
+{"text": "I am packing for a trip. Create a note: charger and passport.", "calls": [{"name": "create_note", "arguments": {"text": "charger and passport"}}], "category": "irrelevant_context"}
+{"text": "Create a note with this content: pack a spare shirt.", "calls": [{"name": "create_note", "arguments": {"text": "pack a spare shirt"}}], "category": "irrelevant_context"}
+{"text": "Make a note saying \"Call Sam at 17:45\".", "calls": [{"name": "create_note", "arguments": {"text": "Call Sam at 17:45"}}], "category": "numeric_string"}
+{"text": "Hello, how are you?", "calls": [], "category": "no_call"}
+{"text": "Thank you for your help.", "calls": [], "category": "no_call"}
+{"text": "What is 12 multiplied by 8?", "calls": [], "category": "no_call"}
+{"text": "I enjoy listening to music.", "calls": [], "category": "no_call"}
+{"text": "The timer went off a moment ago.", "calls": [], "category": "no_call"}
+{"text": "Yesterday I wrote a note about the weather.", "calls": [], "category": "no_call"}
+{"text": "Please do not play any music.", "calls": [], "category": "negation"}
+{"text": "Do not set a timer for 5 minutes.", "calls": [], "category": "negation"}
+{"text": "Do not cancel the timer.", "calls": [], "category": "negation"}
+{"text": "Do not pause the music.", "calls": [], "category": "negation"}
+{"text": "Do not create a note.", "calls": [], "category": "negation"}
+{"text": "Can you explain what a timer is?", "calls": [], "category": "no_call"}
+{"text": "What does the word music mean?", "calls": [], "category": "no_call"}
+{"text": "Translate hello into Spanish.", "calls": [], "category": "no_call"}
+{"text": "My favorite song has the word timer in its title.", "calls": [], "category": "no_call"}
+{"text": "Check the weather.", "calls": [], "category": "missing_arguments", "allowed_status": ["missing_arguments"]}
+{"text": "Set a timer.", "calls": [], "category": "missing_arguments", "allowed_status": ["missing_arguments"]}
+{"text": "Play a song.", "calls": [], "category": "missing_arguments", "allowed_status": ["missing_arguments"]}
+{"text": "Create a note.", "calls": [], "category": "missing_arguments", "allowed_status": ["missing_arguments"]}
+{"text": "Start a timer for a while.", "calls": [], "category": "missing_arguments", "allowed_status": ["missing_arguments"]}
+{"text": "Set a timer for zero seconds.", "calls": [], "category": "numeric_boundary", "allowed_status": ["missing_arguments", "no_call"]}
+{"text": "Set a timer for 25 hours.", "calls": [], "category": "numeric_boundary", "allowed_status": ["missing_arguments", "no_call"]}
+{"text": "Play \"Roads\" and set a timer for 3 minutes.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Check the weather in Paris and pause the music.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Cancel the timer and create a note: buy coffee.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Set a timer for 20 seconds and play \"Angel\".", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Pause the music and cancel the timer.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Either cancel the timer or pause the music.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Check the weather in Tokyo and create a note: book a hotel.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Play \"Glory Box\" or set a timer for 7 minutes.", "calls": [], "category": "multiple_or_ambiguous", "allowed_status": ["ambiguous", "no_call"]}

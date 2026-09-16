@@ -1,0 +1,32 @@
+{"text": "Please show the weather in Reykjavik.", "calls": [{"name": "get_weather", "arguments": {"city": "Reykjavik", "unit": "celsius"}}], "category": "confirmation_weather"}
+{"text": "Get the weather for Wellington in Fahrenheit.", "calls": [{"name": "get_weather", "arguments": {"city": "Wellington", "unit": "fahrenheit"}}], "category": "confirmation_weather"}
+{"text": "How hot is it in Marrakesh?", "calls": [{"name": "get_weather", "arguments": {"city": "Marrakesh", "unit": "celsius"}}], "category": "confirmation_weather"}
+{"text": "Check the temperature in Zagreb using Celsius.", "calls": [{"name": "get_weather", "arguments": {"city": "Zagreb", "unit": "celsius"}}], "category": "confirmation_weather"}
+{"text": "Set a timer for 13 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 13}}], "category": "confirmation_timer"}
+{"text": "Start a timer for twenty-two minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 1320}}], "category": "confirmation_timer"}
+{"text": "I am baking bread. Set a timer for 1 hour and 40 minutes.", "calls": [{"name": "set_timer", "arguments": {"seconds": 6000}}], "category": "confirmation_timer"}
+{"text": "Set a timer for 2 minutes and 35 seconds.", "calls": [{"name": "set_timer", "arguments": {"seconds": 155}}], "category": "confirmation_timer"}
+{"text": "Play \"Golden Brown\".", "calls": [{"name": "play_music", "arguments": {"query": "Golden Brown"}}], "category": "confirmation_music"}
+{"text": "Play music by Fleetwood Mac.", "calls": [{"name": "play_music", "arguments": {"query": "Fleetwood Mac"}}], "category": "confirmation_music"}
+{"text": "Could you play the track \"Space Oddity\"?", "calls": [{"name": "play_music", "arguments": {"query": "Space Oddity"}}], "category": "confirmation_music"}
+{"text": "Put on \"Dreams\".", "calls": [{"name": "play_music", "arguments": {"query": "Dreams"}}], "category": "confirmation_music"}
+{"text": "Create a note: return the green notebook.", "calls": [{"name": "create_note", "arguments": {"text": "return the green notebook"}}], "category": "confirmation_note"}
+{"text": "Write a note saying \"Pick up the repaired guitar\".", "calls": [{"name": "create_note", "arguments": {"text": "Pick up the repaired guitar"}}], "category": "confirmation_note"}
+{"text": "Save a note: train leaves at 08:20.", "calls": [{"name": "create_note", "arguments": {"text": "train leaves at 08:20"}}], "category": "confirmation_note"}
+{"text": "Make a note with the text \"Turn off the timer\".", "calls": [{"name": "create_note", "arguments": {"text": "Turn off the timer"}}], "category": "confirmation_note"}
+{"text": "Cancel my active timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "confirmation_cancel"}
+{"text": "Please end the timer.", "calls": [{"name": "cancel_timer", "arguments": {}}], "category": "confirmation_cancel"}
+{"text": "Pause this music, please.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "confirmation_pause"}
+{"text": "Stop the song that is playing.", "calls": [{"name": "pause_music", "arguments": {}}], "category": "confirmation_pause"}
+{"text": "I listen to records every weekend.", "calls": [], "category": "confirmation_no_call"}
+{"text": "Good evening.", "calls": [], "category": "confirmation_no_call"}
+{"text": "Why does the sky look blue?", "calls": [], "category": "confirmation_no_call"}
+{"text": "Do not play \"Heroes\".", "calls": [], "category": "confirmation_negation"}
+{"text": "Do not set a timer for 42 seconds.", "calls": [], "category": "confirmation_negation"}
+{"text": "Please do not save a note.", "calls": [], "category": "confirmation_negation"}
+{"text": "What is the weather like?", "calls": [], "category": "confirmation_missing", "allowed_status": ["missing_arguments"]}
+{"text": "I would like to set a timer.", "calls": [], "category": "confirmation_missing", "allowed_status": ["missing_arguments"]}
+{"text": "Please write a note.", "calls": [], "category": "confirmation_missing", "allowed_status": ["missing_arguments"]}
+{"text": "Set a timer for 14 minutes and pause the music.", "calls": [], "category": "confirmation_multiple", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Play \"The Passenger\" and cancel the timer.", "calls": [], "category": "confirmation_multiple", "allowed_status": ["ambiguous", "no_call"]}
+{"text": "Get the weather in Quito and make a note: bring a jacket.", "calls": [], "category": "confirmation_multiple", "allowed_status": ["ambiguous", "no_call"]}
