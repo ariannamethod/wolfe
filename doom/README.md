@@ -406,3 +406,47 @@ at the horizon. All proposals and episodes remain locally in `runs/joint-mid1/`;
 the [log](WOLFEDOOMLOG.md) records the full grid and divergent behavior.
 
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).
+
+## Remember one recent health change
+
+[STEP10.md](STEP10.md) asks whether one piece of short history can distinguish
+an empty scene immediately after health falls from the same coarse scene
+without a new decrease. `run.py --history previous-damage` appends the token
+`damagerecent` when current predecision health is below the previous decision's
+predecision health. The first decision has no flag. It uses only observations
+already available before the action; the default remains the original input.
+
+Archive the incoming STEP9 sources using the earlier procedure, with
+`runs/my-mid-health-pair` as `previous`, before changing the episode adapter.
+Then run the declared single experiment:
+
+```sh
+.venv/bin/python history.py run --previous runs/my-mid-health-pair \
+  --output runs/my-health-history
+```
+
+The parent must retain its original 24 responses and make the same calls for
+the 24 flagged inputs before any candidates are created. Six proposals then
+append only a flagged mid-health empty-scene association. Each must preserve
+the four acquired records and the other 47 decisions. If no alternative action
+can meet that boundary, the experiment stops before games.
+
+Otherwise reward selects on 1601–1608; a strict winner surviving a fresh-process
+48-response restart is compared with the parent on 1701–1716. Both derive the
+history bit from their own trajectory. Existing perception, reward and C core
+remain fixed. A visible distinction does not by itself prove that a different
+action will help.
+
+The first run stopped at **NO_ALTERNATIVE_ACTION**, before any games. The
+parent's flagged/unflagged calls matched. All six corrections preserved the
+other 47 choices and four inherited records, but every non-shoot alternative
+returned `ambiguous` at the target. Its new exact example ranked first while
+the retained three-token shoot example remained too close under the core's
+ambiguity rule. Only the unchanged shoot choice passed eligibility.
+
+The 336 recorded responses and six candidate memories remain in `runs/history1/`.
+No selection or evaluation seeds were used, and the working player is unchanged.
+This result identifies a limit of one added condition alongside the retained
+general association; it does not measure a gameplay benefit or prove that
+short history cannot help. The [log](WOLFEDOOMLOG.md) records exact activations
+and the unchanged ambiguity conditions.

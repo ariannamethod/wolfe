@@ -79,6 +79,15 @@ def observation(raw, width, perception="legacy"):
     return f"{health} {ammo} {view}"
 
 
+def history_input(text, health, previous_health, mode="none"):
+    """Optionally expose a health decrease already observed before this call."""
+    if mode not in {"none", "previous-damage"}:
+        raise ValueError(f"Unknown history mode: {mode}")
+    if mode == "previous-damage" and previous_health is not None and health < previous_health:
+        return text + " damagerecent"
+    return text
+
+
 def action_vector(response):
     """Translate a validated choice literally; never select a replacement tool."""
     calls = response.get("calls")
@@ -122,6 +131,8 @@ def main():
     parser.add_argument("--state", type=Path, help="Load a fixed WOLFE memory; never update it during an episode")
     parser.add_argument("--perception", choices=["legacy", "no-effects"], default="legacy",
                         help="Select the largest label, optionally excluding Blood and BulletPuff")
+    parser.add_argument("--history", choices=["none", "previous-damage"], default="none",
+                        help="Optionally report a health decrease since the previous decision")
     args = parser.parse_args()
     if args.decisions <= 0:
         parser.error("--decisions must be positive")
@@ -160,6 +171,8 @@ def main():
             "inputs": {name: digest(ROOT / name) for name in
                        ["tools.json", "initial_examples.jsonl", "STEP1.md", "run.py", "wolfe_binding.py"]},
         }
+        if args.history != "none":
+            metadata["history"] = args.history
         (output / "manifest.json").write_text(json.dumps(metadata, indent=2) + "\n")
         game.init()
         save_frame(game, output / "frame_000.png")
@@ -167,12 +180,15 @@ def main():
         changed = 0
         elapsed = 0
         records = 0
+        previous_health = None
         with Wolfe(library, ROOT / "tools.json", ROOT / "initial_examples.jsonl", state=args.state) as wolf, \
                 (output / "trajectory.jsonl").open("w") as journal, \
                 (output / "trace.txt").open("w") as trace:
             while not game.is_episode_finished() and records < args.decisions:
                 before = snapshot(game)
-                text = observation(before, game.get_screen_width(), args.perception)
+                base_input = observation(before, game.get_screen_width(), args.perception)
+                text = history_input(base_input, before["variables"]["health"],
+                                     previous_health, args.history)
                 response = wolf.call(text)
                 name, buttons, fallback = action_vector(response)
                 reward = float(game.make_action(buttons, QUANTUM))
@@ -184,6 +200,13 @@ def main():
                           "buttons": buttons, "executor_fallback": fallback,
                           "requested_tics": QUANTUM, "elapsed_tics": actual_tics,
                           "reward": reward, "after": after}
+                if args.history != "none":
+                    record["base_input"] = base_input
+                    record["history"] = {
+                        "mode": args.history, "previous_health": previous_health,
+                        "damagerecent": text != base_input,
+                    }
+                previous_health = before["variables"]["health"]
                 journal.write(json.dumps(record, sort_keys=True) + "\n")
                 journal.flush()
                 line = (f"{records:03d} tic {before['tic']}->{after['tic']} {text} "

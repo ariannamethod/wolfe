@@ -2,6 +2,144 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — distinguish one already-observed health decrease
+
+Oleg authorized the next turn after
+[`0a15797`](https://github.com/ariannamethod/wolfe/commit/0a1579702e485f16ae826780606740655bade42a).
+The incoming review matched STEP9's committed sources, protocol, engine and
+previous input hashes to its sealed artifacts and intact independent report.
+Its three non-tied raw outcomes again reproduce reward 95 -> 94 and deaths
+4 -> 5. The failed five-record candidate remains evidence; the retained parent
+is still `ef1a98d8093aac0c8eed9c82d4903ab6fab9656e222a9a9f9258760d7352d369`.
+
+The prior C review motivated investigating information missing from the three
+tokens. New diagnosis used only that parent's old selection seeds 1401–1408.
+They contain 17 mid-health, ammo-present, empty-scene decisions. Four follow
+an observed health decrease; thirteen do not. The clearest adjacent witness:
+
+```text
+seed 1406, decision 73:
+  previous observed health 80 -> current health 48
+  ammo20, angle302.34375, kills4, no focus -> empty-scene shoot
+seed 1406, decision 74:
+  previous observed health 48 -> current health 48
+  ammo20, angle302.34375, kills4, no focus -> the identical C response
+```
+
+This shows a missing distinction, not an optimal alternative action. Decision
+74 is only four tics after decision 73; absence of another decrease does not
+mean safety. No policy is prescribed from the apparent desirability of dodging.
+
+A separate suspicion about zero-width labels was falsified. Tagged ViZDoom
+1.3.0 admits labelled sprites with positive pixel counts, but writes bounding
+dimensions as max minus min: a single visible column can have width zero.
+Dropping those labels would remove real evidence. The same engine prefixes
+dead actors with `Dead`; none occur in STEP9's 40,128 predecision snapshots.
+See the primary [label construction](https://github.com/Farama-Foundation/ViZDoom/blob/1.3.0/src/vizdoom/src/viz_game.cpp#L480)
+and [actor naming](https://github.com/Farama-Foundation/ViZDoom/blob/1.3.0/src/vizdoom/src/viz_game.cpp#L241).
+Using inclusive box area changes ranking in two shared evaluation states,
+and changes tokens in only one; it changes none of the selection states.
+No label-selection change is part of this turn.
+
+[STEP10.md](STEP10.md) declares one opt-in bit: current predecision health below
+the previous decision's predecision health appends `damagerecent`; first call
+is false. Each player derives it from its own history. `run.py` records base
+input, the previous health and the bit before the next action is interpreted.
+Old observation/action helpers are unchanged. Read-only replay reproduced
+all 899 old selection inputs, with 32 flagged observations in total and four
+flagged target visits. Initial, unchanged-health and healing cases produce no
+flag. An independent reader confirmed the update uses `before`, never future
+`after` or reward; default mode preserves the old input and record schema.
+
+Unknown words have nonzero influence in the C field, so the protocol first
+tests all 24 flagged/unflagged parent action pairs. Only if those choices match
+may six independent children append a flagged mid-health empty-scene correction.
+Each must retain the four original records, zero counters and the other 47
+choices. Failure to represent a different action ends the step before games.
+Otherwise one reward selection on 1601–1608 and a fresh paired comparison on
+1701–1716 answer whether that distinction helps. No alternate feature, token,
+reward or C change follows from a failure.
+
+Nine exact incoming sources were archived in `runs/joint-mid1-source/` before
+the episode adapter changed. The incoming inventory covers 11,508 historical
+files in twelve sealed directories.
+
+Independent pre-data review found no contract or implementation blocker. The
+declared command ran once:
+
+```sh
+.venv/bin/python history.py run --previous runs/joint-mid1 --output runs/history1
+```
+
+The baseline gate passes: all 24 original full responses match, and all 24
+flagged choices equal their unflagged counterparts. Each of the six candidates
+contains exactly the original four records plus its requested fifth record;
+counters stay zero and all other 47 choices remain fixed. However, every
+different requested target action returns `ambiguous`, with no emitted call.
+Only the parent-matching shoot correction is eligible:
+
+| Requested target action | Actual status | Top activation | Runner activation | Margin | Other choices changed |
+| --- | --- | ---: | ---: | ---: | ---: |
+| turn_left | ambiguous | 0.981218 | 0.969232 | 0.011986 | 0 |
+| turn_right | ambiguous | 0.981130 | 0.969169 | 0.011961 | 0 |
+| move_forward | ambiguous | 0.980800 | 0.969109 | 0.011690 | 0 |
+| strafe_left | ambiguous | 0.981077 | 0.969098 | 0.011978 | 0 |
+| strafe_right | ambiguous | 0.980998 | 0.969208 | 0.011790 | 0 |
+| shoot control | call | 0.981359 | 0.725072 | 0.256287 | 0 |
+
+The requested action ranks first in every row. Shoot is runner-up for the
+five alternatives; strafe_right is runner-up for the control. Serialized
+values are rounded, so displayed subtraction can differ in the last digit.
+These are neural activations, not calibrated success probabilities.
+
+The raw turn_left candidate shows the phenomenon directly:
+
+```text
+healthmid ammopresent sceneempty
+  -> call shoot
+healthmid ammopresent sceneempty damagerecent
+  -> {"calls":[],"status":"ambiguous","confidence":0.981218,...}
+     best example: healthmid ammopresent sceneempty damagerecent -> turn_left
+     runner example: healthmid ammopresent sceneempty -> shoot
+```
+
+The result is **NO_ALTERNATIVE_ACTION / benefit NOT_RUN**. There are 336
+recorded responses: 48 for the parent and 48 for each of six corrected models.
+There are **zero new game episodes**. No selection, selected memory, restart,
+or evaluation artifacts were produced, and seeds 1601–1608 / 1701–1716 remain
+unused. The existing four-record player and its published gameplay statistics
+are unchanged.
+
+A separate source reader identified the precise boundary. The neural branch
+of [`infer`](../wolfe.c#L2125) rejects a choice when its activation margin is
+below 0.065, the runner is above 0.52, and its evidence advantage is below 0.08.
+All three hold here. For turn_left, the new exact four-token example has
+evidence 1; the old three-token shoot example retains approximately 0.933042,
+so the evidence advantage is approximately 0.066958. Every old example token
+and adjacent pair still matches. The extra query condition affects only the
+query-coverage part of `example_scores`, weighted 0.22; the source-coverage part
+remains complete. After recurrent settling, the winning and competing
+activations remain close enough for the explicit ambiguity gate to fire.
+
+Correction retains the old example because its text differs from the new one.
+Thus this is a demonstrated limit of this additive conditional representation
+and ambiguity contract, not lost state, future-data leakage, or collateral
+changes to other decisions. It does not establish that every possible history
+encoding would fail. A future question is how more-specific experience should
+coexist with a broader association while preserving abstention for equally
+supported conflicting evidence. No threshold, token, corpus, target or C implementation
+was changed to rescue this failed experiment.
+
+Independent reconstruction of all 336 saved responses, six memories and the
+899-decision historical witness found no discrepancy. It confirms 331 calls
+and five abstentions, only the shoot control eligible, and no game artifacts.
+The receipt is `runs/history1/independent-audit.json`. Source, protocol, engine,
+library and inherited input hashes match; all 11,508 prior files remain
+byte-identical, with no additions or removals in their sealed directories.
+Syntax, CLI, whitespace and documentation-link checks passed. The game-selection
+and evaluation branches were not exercised because the predeclared
+representation gate stopped the experiment.
+
 ## 2026-09-17 — jointly revisit mid-health center and empty-scene memory
 
 Oleg authorized continuing, publication, new screenshots, and a parallel
