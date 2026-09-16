@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """WOLFE: a readable, standard-library-only port of the C neural field.
 
-The declarations construct all connections. No checkpoint, optimizer, API,
+The declarations construct all connections. No checkpoint, optimizer, remote API,
 embedding service, or tool execution is involved. The C implementation is the
 primary body; this file exposes the same computation for inspection.
 
     model = Wolfe('tools.json', 'examples.jsonl')
     result = model.call('set a timer for thirty seconds', reasoning=True)
+
+Set reasoning='compact' for a short evidence view. With an explicit state
+path, model.correct(record) saves a bounded correction and rebuilds the field.
 
 Internal source positions count UTF-8 bytes, exactly as in wolfe.c.
 """
@@ -21,6 +24,7 @@ import time
 MAX_TOOLS, MAX_PROPERTIES, MAX_EXAMPLES = 64, 16, 2048
 MAX_WORDS, MAX_TOKENS, DIMENSIONS, ITERATIONS = 4096, 96, 96, 6
 MAX_TEXT, MAX_FILE, MAX_VALUES = 2048, 4 * 1024 * 1024, 32
+MAX_CORRECTIONS = 32
 MASK64, FNV_OFFSET, FNV_PRIME = (1 << 64) - 1, 1469598103934665603, 1099511628211
 FILLERS = set(b'a an the please could would can you i me my we our to of for is are be it this that some with and then now just kindly want need like'.split())
 SMALL_NUMBERS = dict(zip(b'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety'.split(), list(range(20)) + list(range(20, 100, 10))))
@@ -239,6 +243,7 @@ class Example:
     tokens: list
     arguments: dict = field(default_factory=dict)
     synthetic: bool = False
+    corrected: bool = False
 
 
 @dataclass
@@ -262,19 +267,23 @@ class Candidate:
 class Wolfe:
     """Build the model directly from editable tool schemas and JSONL examples."""
     def __init__(self, tools='tools.json', examples='examples.jsonl', state=None):
+        self.tools_path, self.examples_path = tools, examples
         self.identity = FNV_OFFSET
         self.tools, self.examples, self.words = [], [], []
         self.vocabulary = {}
         self._relation_cache = {}
         self._load_tools(tools)
         self._load_examples(examples)
+        self.base_examples = [(example.text, example.tool, dict(example.arguments)) for example in self.examples]
+        self.corrections = []
         self.signatures = [[0.0] * DIMENSIONS for _ in range(len(self.tools) + 1)]
         self.accepted = [0] * (len(self.tools) + 1)
         self.rejected = [0] * (len(self.tools) + 1)
-        self._build_field()
         self.state_path = state
         if state:
-            self.load_state(state)
+            self.load_state(state, rebuild=False)
+        self._append_corrections()
+        self._build_field()
 
     def _load_tools(self, path):
         data = read_file(path)
@@ -528,6 +537,39 @@ class Wolfe:
                 return True
         return False
 
+    def _prefix_words(self, tokens):
+        # Topic fillers still carry grammatical roles in the ordered prefix.
+        result = []
+        roles = (b'am', b'was', b'were', b'have', b'has', b'had', b'no', b'longer', b'he', b'she', b'they', b"i'd")
+        ignored = (b'a', b'an', b'the', b'please', b'just', b'kindly', b'for', b'to', b'of', b'with')
+        for token in tokens:
+            if token.quoted or token.slot:
+                break
+            if token.word not in FILLERS and token.word not in roles:
+                if token.word not in self.vocabulary:
+                    continue
+                break
+            if token.word not in ignored:
+                if token.word == b'you' and any(word in (b'want', b'need', b'like') for word in result):
+                    continue
+                result.append(token.word)
+        return result
+
+    def _prefix_agreement(self, query, example):
+        left, right = self._prefix_words(query), self._prefix_words(example)
+        if not left:
+            return 1.0
+        position = matched = 0
+        groups = ((b'can', b'could', b'would'), (b'want', b'need', b'like'), (b'i', b"i'd"))
+        for word in left:
+            for index in range(position, len(right)):
+                if word == right[index] or any(word in group and right[index] in group for group in groups):
+                    matched += 1
+                    position = index + 1
+                    break
+        overlap = matched / max(1.0, len(left) + len(right) - matched)
+        return .30 + .70 * overlap * overlap
+
     def _example_scores(self, query, example):
         matched = total = query_match = query_total = keyword_match = keyword_total = sequence = sequence_total = attention = 0.0
         for word in example.tokens:
@@ -594,8 +636,21 @@ class Wolfe:
                     if value > candidate.keyword:
                         candidate.keyword, candidate.best = value, index
             return candidates, []
+        roles = [0.0] * count
+        role_examples = [0] * count
+        for example in self.examples:
+            if not example.synthetic:
+                role_examples[example.tool] += 1
+                roles[example.tool] = max(roles[example.tool], self._prefix_agreement(query, example.tokens))
+        for i, examples in enumerate(role_examples):
+            if not examples:
+                roles[i] = 1.0
+        roles[len(self.tools)] = 1.0
         for index, example in enumerate(self.examples):
             field_score, attention, order, keyword = self._example_scores(query, example)
+            field_score *= roles[example.tool]
+            attention *= roles[example.tool]
+            order *= roles[example.tool]
             evidence = .90 * attention + .10 * order
             candidate = candidates[example.tool]
             if field_score > candidate.field:
@@ -730,14 +785,14 @@ class Wolfe:
         best = None
         best_score = -1e30
 
-        def visit(pi, qi, begins, ends, score, matched, first, last):
+        def visit(pi, qi, begins, ends, literals, score, matched, first, last):
             nonlocal budget, best, best_score
             budget -= 1
             if budget < 0:
                 return
             if pi == len(pattern):
                 if matched and score > best_score:
-                    best = (begins[:], ends[:], score, matched, first, last)
+                    best = (begins[:], ends[:], literals[:], score, matched, first, last)
                     best_score = score
                 return
             token = pattern[pi]
@@ -745,33 +800,53 @@ class Wolfe:
                 captures = [len(query)] if pi + 1 == len(pattern) else range(qi, len(query) + 1)
                 for end in captures:
                     begins[pi], ends[pi] = qi, end
-                    visit(pi + 1, end, begins, ends, score, matched, first, last)
+                    visit(pi + 1, end, begins, ends, literals, score, matched, first, last)
                 return
             for k in range(qi, len(query)):
                 if bool(token.quoted) == bool(query[k].quoted) and token.word == query[k].word:
                     weight = .1 if token.word in FILLERS else 1.0
-                    visit(pi + 1, k + 1, begins[:], ends[:], score + weight - .035 * (k - qi), matched + 1, k if first < 0 else first, k + 1)
-            visit(pi + 1, qi, begins[:], ends[:], score - (.05 if token.word in FILLERS else .85), matched, first, last)
+                    following = literals[:]
+                    following[pi] = k
+                    visit(pi + 1, k + 1, begins[:], ends[:], following, score + weight - .035 * (k - qi), matched + 1, k if first < 0 else first, k + 1)
+            visit(pi + 1, qi, begins[:], ends[:], literals[:], score - (.05 if token.word in FILLERS else .85), matched, first, last)
 
-        visit(0, 0, [-1] * len(pattern), [-1] * len(pattern), 0.0, 0, -1, 0)
+        visit(0, 0, [-1] * len(pattern), [-1] * len(pattern), [-1] * len(pattern), 0.0, 0, -1, 0)
         if best_score < .5:
             return None
-        begins, ends, score, matched, first, last = best
-        slots = {}
+        begins, ends, literals, score, matched, first, last = best
+        slots, bound = {}, {}
         names = {prop.name.encode('utf-8') for prop in tool.properties}
         for i, token in enumerate(pattern):
             if token.slot and token.word in names:
                 name = token.word.decode('utf-8')
                 slots[name] = (begins[i], ends[i])
-                if begins[i] == ends[i] and any(prop.required and prop.name == name for prop in tool.properties):
-                    score -= 3.0
+                bound[name] = i > 0 and not pattern[i - 1].slot and literals[i - 1] >= 0
         anchors = sum(not token.slot for token in pattern)
-        return {'slots': slots, 'score': score + .08 * anchors, 'matched': matched, 'first': first, 'last': last}
+        return {'slots': slots, 'bound': bound, 'score': score, 'selection_score': score + .08 * anchors,
+                'matched': matched, 'first': first, 'last': last}
+
+    def _frame_word(self, winner, word):
+        return any(token.word == word and not token.slot
+                   for example in self.examples if example.tool == winner and not example.synthetic
+                   for token in example.tokens)
+
+    def _frame_related(self, winner, prop, word):
+        if word in FILLERS or self._frame_word(winner, word):
+            return True
+        query = Token(word, 0, 0, id=self.vocabulary.get(word, -1))
+        for example in self.examples:
+            if example.tool == winner and not example.synthetic:
+                if any(not token.slot and self.relation(query, token) >= .08 for token in example.tokens):
+                    return True
+        for token in tokenize(prop.description):
+            token.id = self.vocabulary.get(token.word, -1)
+            if self.relation(query, token) >= .08:
+                return True
+        return False
 
     def _string_span(self, data, query, tool, prop, begin, end):
-        while begin < end and query[begin].word in (b'in', b'for', b'to'):
-            begin += 1
-        while end > begin and query[end - 1].word in (b'please', b'kindly'):
+        winner = self.tools.index(tool)
+        while end > begin and not query[end - 1].quoted and query[end - 1].word in (b'please', b'kindly'):
             end -= 1
         # Polite request suffixes are not part of an unquoted argument.
         if end - begin > 2 and not query[end - 2].quoted and not query[end - 1].quoted and query[end - 2].word == b'for' and query[end - 1].word in (b'me', b'us'):
@@ -782,7 +857,7 @@ class Wolfe:
                 if other is prop:
                     continue
                 for value in other.values:
-                    if self._phrase_at(query, i, scalar_text(value)) is not None:
+                    if not query[i].quoted and self._phrase_at(query, i, scalar_text(value)) is not None:
                         end = i
                         while end > begin and (query[end - 1].word in FILLERS or query[end - 1].word in (b'in', b'using')):
                             end -= 1
@@ -792,8 +867,12 @@ class Wolfe:
         while start > 0 and data[start - 1] in b"\"'":
             start -= 1
         quotes = [i for i in range(start, finish) if data[i] == 34 and (i == 0 or data[i - 1] != 92)]
-        if len(quotes) >= 2 and (quotes[0] == start or any(data[start:].startswith(prefix) for prefix in (b'the ', b'saying ', b'called ', b'named '))):
-            return begin, end, quotes[0] + 1, quotes[1]
+        if len(quotes) >= 2:
+            first, second = quotes[:2]
+            introduction = all(self._frame_related(winner, prop, token.word) for token in query[begin:end] if token.start < first)
+            tail = all(byte in SPACE + b'.!?,;' for byte in data[second + 1:finish])
+            if introduction and tail:
+                return begin, end, first + 1, second
         for i in range(start, finish):
             if data[i] == 58 and not (i > 0 and i + 1 < len(data) and 48 <= data[i - 1] <= 57 and 48 <= data[i + 1] <= 57):
                 start = i + 1
@@ -808,21 +887,85 @@ class Wolfe:
             finish -= 1
         return begin, end, start, finish
 
-    def _extract(self, text, query, winner):
+    def _string_candidates(self, data, query, winner, prop, field_score):
+        """Compete distinct source spans against an explicit absent-value candidate."""
+        tool = self.tools[winner]
+        candidates = [{'start': -1, 'end': -1, 'score': 1.0}]
+        for example in self.examples:
+            if example.tool != winner or example.synthetic:
+                continue
+            alignment = self._align_template(example, query, tool)
+            if not alignment or prop.name not in alignment['slots']:
+                continue
+            begin, end = alignment['slots'][prop.name]
+            if begin < 0 or begin >= end:
+                continue
+            begin, end, start, finish = self._string_span(data, query, tool, prop, begin, end)
+            if finish <= start:
+                continue
+            total = sum(.1 if token.word in FILLERS else 1.0 for token in example.tokens if not token.slot)
+            content = [token for token in query[begin:end] if token.start >= start and token.end <= finish]
+            quoted = any(token.quoted for token in content)
+            novel = quoted or any(token.word not in FILLERS and not self._frame_word(winner, token.word) for token in content)
+            content_words = sum(token.word not in FILLERS for token in content)
+            if alignment['bound'][prop.name] and not content_words:
+                novel = True
+            score = ((1.0 if alignment['bound'][prop.name] else .15)
+                     + .6 * clamp(alignment['score'] / max(1.0, total), 0.0, 1.0)
+                     + .4 * bool(novel) + .05 * alignment['score'])
+            if quoted:
+                score += .25
+            if not novel and end - begin <= 2 and not quoted:
+                score -= .8
+            previous = next((item for item in candidates[1:] if item['start'] == start and item['end'] == finish), None)
+            if previous is not None:
+                previous['score'] = max(previous['score'], score)
+            elif len(candidates) < MAX_TOKENS:
+                candidates.append({'start': start, 'end': finish, 'score': score})
+        # The corpus can supply a preposition binding a fronted comma-delimited value.
+        if len(query) > 2 and not query[0].quoted:
+            binder = any(token.slot and token.word == prop.name.encode('utf-8')
+                         and (example.tokens[i - 1].word in FILLERS or example.tokens[i - 1].word == b'in')
+                         and example.tokens[i - 1].word == query[0].word
+                         for example in self.examples if example.tool == winner and not example.synthetic
+                         for i, token in enumerate(example.tokens) if i > 0)
+            cut = next((i + 1 for i in range(1, len(query) - 1)
+                        if b',' in data[query[i].end:query[i + 1].start]), -1) if binder else -1
+            if cut > 1 and len(candidates) < MAX_TOKENS:
+                candidates.append({'start': query[1].start, 'end': query[cut - 1].end,
+                                   'score': 1.25 + .4 * field_score})
+        chosen, second = 0, -1
+        for i in range(1, len(candidates)):
+            if candidates[i]['score'] > candidates[chosen]['score']:
+                second, chosen = chosen, i
+            elif second < 0 or candidates[i]['score'] > candidates[second]['score']:
+                second = i
+        diagnostics = {'evidence': round(candidates[chosen]['score'], 6),
+                       'alternative': round(candidates[second]['score'], 6) if second >= 0 else 0.0,
+                       'candidates': len(candidates)}
+        if not chosen:
+            return None, diagnostics
+        start, finish = candidates[chosen]['start'], candidates[chosen]['end']
+        value = data[start:finish].decode('utf-8')
+        if not 0 < finish - start < MAX_TEXT or len(json.dumps(value, ensure_ascii=False).encode('utf-8')) >= MAX_TEXT:
+            return None, diagnostics
+        return {'value': value, 'source': 'input', 'span': [start, finish]}, diagnostics
+
+    def _extract(self, text, query, winner, field_score, missing_diagnostics=None):
         tool, best, best_example = self.tools[winner], None, None
         for example in self.examples:
             if example.tool != winner or example.synthetic:
                 continue
             alignment = self._align_template(example, query, tool)
-            if alignment and (best is None or alignment['score'] > best['score']):
+            if alignment and (best is None or alignment['selection_score'] > best['selection_score']):
                 best, best_example = alignment, example
-        captures = {}
+        captures, complete = {}, True
         data = text.encode('utf-8')
         for prop in tool.properties:
             begin, end = best['slots'].get(prop.name, (0, len(query))) if best else (0, len(query))
-            bound = best is not None and prop.name in best['slots']
             extracted = None
             capture = None
+            diagnostics = None
             if prop.values:
                 extracted = self._enum_value(prop, query, begin, end)
             elif prop.type in ('number', 'integer'):
@@ -834,23 +977,13 @@ class Wolfe:
                     if query[i].word in (b'true', b'false'):
                         extracted = (query[i].word == b'true', i, i + 1)
                         break
-            elif bound and begin < end:
-                begin, end, start, finish = self._string_span(data, query, tool, prop, begin, end)
-                if finish > start:
-                    capture = {'value': data[start:finish].decode('utf-8'), 'source': 'input', 'span': [start, finish]}
+            elif prop.type == 'string':
+                capture, diagnostics = self._string_candidates(data, query, winner, prop, field_score)
             if extracted:
                 value, at, until = extracted
                 if prop.type in ('number', 'integer'):
                     value = json.loads(format(value, '.17g'))
                 capture = {'value': value, 'source': 'input', 'span': [query[at].start, query[until - 1].end]}
-            if capture and prop.type == 'string' and not prop.values and best_example:
-                for example in self.examples:
-                    if example.tool != winner:
-                        continue
-                    literals = [token for token in example.tokens if not token.slot and token.word not in FILLERS and token.word not in (b'by', b'from', b'in', b'at', b'on')]
-                    if any(token.slot for token in example.tokens) and literals and 0 < end - begin <= 2 and literals[-1].word == query[end - 1].word and not query[end - 1].quoted:
-                        capture = None
-                        break
             if capture and not prop.valid(capture['value']):
                 capture = None
             if capture is None and best_example and prop.name in best_example.arguments:
@@ -864,12 +997,19 @@ class Wolfe:
                             break
             if capture is None and prop.has_default:
                 capture = {'value': prop.default, 'source': 'schema default', 'span': [0, 0]}
+            for example in self.examples:
+                if example.corrected and example.tool == winner and example.text == text and prop.name in example.arguments:
+                    capture = {'value': example.arguments[prop.name], 'source': 'correction', 'span': [0, 0]}
+                    diagnostics = {'evidence': 1.0, 'alternative': 0.0, 'candidates': 2}
             if capture and prop.valid(capture['value']):
+                capture.update(diagnostics or {'evidence': 1.0, 'alternative': 0.0, 'candidates': 2})
                 captures[prop.name] = capture
             elif prop.required:
-                # Preserve C's early return: later arguments have not been bound.
-                return captures, False
-        return captures, True
+                complete = False
+                if missing_diagnostics is not None:
+                    missing_diagnostics.append({'name': prop.name, **(diagnostics or
+                        {'evidence': 1.0, 'alternative': 0.0, 'candidates': 1})})
+        return captures, complete
 
     @staticmethod
     def _rank(candidates, mode):
@@ -890,7 +1030,15 @@ class Wolfe:
         for i in range(1, len(query)):
             colon = any(data[k] == 58 and not (k > 0 and k + 1 < len(data) and 48 <= data[k - 1] <= 57 and 48 <= data[k + 1] <= 57) for k in range(query[i - 1].end, query[i].start))
             if colon and not query[i].quoted:
-                candidates, _ = self._score(query[:i], mode)
+                begin = 0
+                for k in range(1, i):
+                    if query[k].quoted:
+                        continue
+                    for position in range(query[k - 1].end, query[k].start):
+                        if data[position] in b'.;!?' and not (data[position] == 46 and position > 0
+                                and position + 1 < len(data) and 48 <= data[position - 1] <= 57 and 48 <= data[position + 1] <= 57):
+                            begin = k
+                candidates, _ = self._score(query[begin:i], mode)
                 winner, _, best, runner = self._rank(candidates, mode)
                 if winner < len(self.tools) and best > .70 and best - runner > .07:
                     if any(prop.type == 'string' and not prop.values for prop in self.tools[winner].properties):
@@ -906,6 +1054,9 @@ class Wolfe:
             if query[i].quoted or (query[i - 1].quoted and not self._explicit_continuation(data, query, i)):
                 continue
             split = query[i].word in (b'and', b'then')
+            if split and query[i].word == b'and' and i + 1 < len(query):
+                if self._numeric_atom(query, i + 1, len(query)) is not None:
+                    split = False
             for j in range(query[i - 1].end, query[i].start):
                 if data[j] in b'.;:' and not (data[j] == 46 and j > 0 and j + 1 < len(data) and 48 <= data[j - 1] <= 57 and 48 <= data[j + 1] <= 57):
                     split = True
@@ -924,6 +1075,9 @@ class Wolfe:
             subcandidates, subtrajectory = self._score(subquery, mode)
             selected, _, best, runner = self._rank(subcandidates, mode)
             if selected < len(self.tools) and best > .65 and best - runner > .07 and (mode != 'neural' or subcandidates[selected].evidence > .57):
+                _, complete = self._extract(data.decode('utf-8'), subquery, selected, subcandidates[selected].field)
+                if not complete:
+                    continue
                 if chosen >= 0 and chosen != selected:
                     different = True
                 positives += 1
@@ -931,12 +1085,14 @@ class Wolfe:
                 saved = subquery, subcandidates, subtrajectory, selected, best, best - runner
         if positives > 1 and (different or self.tools[chosen].properties):
             return 2, None
-        if positives >= 1 and chosen != winner:
+        if positives >= 1 and (chosen != winner or candidates[chosen].evidence < .52):
             return 1, saved
         return 0, None
 
     def call(self, text, reasoning=False, mode='neural'):
         """Return at most one validated call; never execute the selected tool."""
+        if reasoning not in (False, True, 2, 'compact'):
+            raise ValueError('reasoning must be false, true or compact')
         if mode not in ('neural', 'field', 'keyword'):
             raise ValueError('unknown mode')
         bounded_string(text, MAX_TEXT, 'text exceeds 2047 bytes')
@@ -948,7 +1104,7 @@ class Wolfe:
         candidates, trajectory = self._score(query, mode)
         winner, second, best, runner = self._rank(candidates, mode)
         confidence, margin = clamp(best, 0, 1), best - runner
-        status, captures = 'call', {}
+        status, captures, missing_diagnostics = 'call', {}, []
         split, saved = self._clause_choice(data, query, candidates, trajectory, mode, winner)
         if split == 1:
             query, candidates, trajectory, winner, confidence, margin = saved
@@ -965,7 +1121,7 @@ class Wolfe:
         elif ambiguous:
             status = 'ambiguous'
         else:
-            captures, complete = self._extract(text, query, winner)
+            captures, complete = self._extract(text, query, winner, candidates[winner].field, missing_diagnostics)
             if not complete:
                 status = 'missing_arguments'
         scores = [getattr(candidate, mode) for candidate in candidates]
@@ -976,7 +1132,7 @@ class Wolfe:
             result['tool'] = self.tools[winner].name
             result['missing'] = [prop.name for prop in self.tools[winner].properties if prop.required and prop.name not in captures]
         if reasoning:
-            explain = {'mode': mode, 'iterations': ITERATIONS if mode == 'neural' else 0, 'margin': round(margin, 6), 'score_kind': 'activation, not calibrated probability', 'candidates': [], 'evidence': [], 'arguments': [], 'trajectory': []}
+            explain = {'mode': mode, 'iterations': ITERATIONS if mode == 'neural' else 0, 'margin': round(margin, 6), 'score_kind': 'activation, not calibrated probability', 'candidates': [], 'evidence': [], 'arguments': [], 'missing_arguments': missing_diagnostics if status == 'missing_arguments' else [], 'trajectory': []}
             for i, candidate in enumerate(candidates):
                 item = {'tool': self.tools[i].name if i < len(self.tools) else None, 'score': round(scores[i], 6), 'field': round(candidate.field, 6), 'prophecy': round(candidate.prophecy, 6)}
                 if candidate.best >= 0:
@@ -996,19 +1152,81 @@ class Wolfe:
                 explain['arguments'].append({'name': name, **capture})
             if mode == 'neural':
                 explain['trajectory'] = [round(state[winner], 6) for state in trajectory]
+            if reasoning == 2 or reasoning == 'compact':
+                explain = {'mode': mode, 'score_kind': explain['score_kind'],
+                           'winner': self.tools[winner].name if winner < len(self.tools) else None,
+                           'evidence': [item['text'] for item in explain['evidence'][:8]],
+                           'arguments': explain['arguments'], 'margin': round(margin, 6)}
             result['reasoning'] = explain
         self._relation_cache.clear()
         return result
 
-    def load_state(self, path):
+    def _validate_correction(self, record):
+        """A correction is an explicit complete answer, never a prediction."""
+        if not isinstance(record, dict) or any(key not in ('text', 'tool', 'arguments') for key in record):
+            raise ValueError('correction must contain only text, tool and arguments')
+        if len(json.dumps(record, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')) > 65535:
+            raise ValueError('correction exceeds 65535 bytes')
+        text = bounded_string(record.get('text'), MAX_TEXT, 'invalid correction text')
+        if not text or 'tool' not in record:
+            raise ValueError('correction requires nonempty text and tool')
+        tokens = tokenize(text)
+        if not tokens:
+            raise ValueError('correction requires nonempty text and tool')
+        names = [tool.name for tool in self.tools]
+        name = record['tool']
+        if name is not None and (not isinstance(name, str) or name not in names):
+            raise ValueError('correction names unknown tool')
+        if name is not None and 'arguments' not in record:
+            raise ValueError('correction requires complete arguments')
+        arguments = record.get('arguments', {})
+        if not isinstance(arguments, dict):
+            raise ValueError('correction arguments must be an object')
+        properties = [] if name is None else self.tools[names.index(name)].properties
+        known = {prop.name: prop for prop in properties}
+        for key, value in arguments.items():
+            if key not in known:
+                raise ValueError('correction argument names unknown property')
+            if len(json.dumps(value, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')) >= MAX_TEXT or not known[key].valid(value):
+                raise ValueError('correction argument violates schema')
+        if any(prop.required and prop.name not in arguments for prop in properties):
+            raise ValueError('correction is missing required arguments')
+        return {'text': text, 'tool': name, 'arguments': dict(arguments)}
+
+    def _append_corrections(self):
+        names = [tool.name for tool in self.tools]
+        corrected = {record['text'] for record in self.corrections}
+        self.examples = [example for example in self.examples if example.text not in corrected]
+        for record in self.corrections:
+            winner = names.index(record['tool']) if record['tool'] is not None else len(self.tools)
+            self._add_example(record['text'], winner, arguments=record['arguments'])
+            self.examples[-1].corrected = True
+            for token in self.examples[-1].tokens:
+                token.slot = False
+
+    def _rebuild_field(self):
+        # Rebuild from the unchanged declarative source plus bounded corrections.
+        # Slot derivation mutates tokens, so restore their source representation.
+        self.examples = []
+        for text, tool, arguments in self.base_examples:
+            self._add_example(text, tool, arguments=arguments)
+        self.words, self.vocabulary, self._relation_cache = [], {}, {}
+        self.signatures = [[0.0] * DIMENSIONS for _ in range(len(self.tools) + 1)]
+        self._append_corrections()
+        self._build_field()
+
+    def load_state(self, path, rebuild=True):
         if not pathlib.Path(path).exists():
             return
         state = strict_json(read_file(path))
         if not isinstance(state, dict) or state.get('identity') != f'{self.identity:016x}':
             raise ValueError('state identity does not match tools and examples; delete state to reset')
+        if not numeric(state.get('version')) or state['version'] not in (1, 2):
+            raise ValueError('unsupported state version')
         if not isinstance(state.get('tools'), dict):
             raise ValueError('invalid state tools')
         names = [tool.name for tool in self.tools]
+        accepted, rejected = [0] * len(self.accepted), [0] * len(self.rejected)
         for name, counters in state['tools'].items():
             if name not in names:
                 raise ValueError('state names unknown tool')
@@ -1018,7 +1236,60 @@ class Wolfe:
             if any(not numeric(value) or value < 0 or value > 65535 or math.floor(value) != value for value in values):
                 raise ValueError('invalid bounded state counters')
             i = names.index(name)
-            self.accepted[i], self.rejected[i] = map(int, values)
+            accepted[i], rejected[i] = map(int, values)
+        records = state.get('corrections', []) if state['version'] == 1 else state.get('corrections')
+        if not isinstance(records, list) or len(records) > MAX_CORRECTIONS:
+            raise ValueError('invalid bounded corrections')
+        if state['version'] == 1 and 'corrections' in state:
+            raise ValueError('version 1 state cannot contain corrections')
+        corrections = [self._validate_correction(record) for record in records]
+        if len({record['text'] for record in corrections}) != len(corrections):
+            raise ValueError('duplicate correction text in state')
+        self.accepted, self.rejected, self.corrections = accepted, rejected, corrections
+        if rebuild:
+            self._rebuild_field()
+
+    def _save_state(self, path):
+        state = {'version': 2, 'identity': f'{self.identity:016x}',
+                 'tools': {tool.name: {'accepted': self.accepted[i], 'rejected': self.rejected[i]} for i, tool in enumerate(self.tools)},
+                 'corrections': self.corrections}
+        if len(os.fsencode(path)) + 5 >= 4096:
+            raise ValueError('state path too long')
+        temporary = str(path) + '.tmp'
+        try:
+            pathlib.Path(temporary).write_text(json.dumps(state, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '\n', encoding='utf-8')
+            os.replace(temporary, path)
+        except OSError as error:
+            try:
+                pathlib.Path(temporary).unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise ValueError('state write failed') from error
+
+    def correct(self, record, path=None):
+        """Persist one explicit correction and rebuild; no optimizer is involved."""
+        path = path or self.state_path
+        if not path:
+            raise ValueError('correction requires --state')
+        record = self._validate_correction(record)
+        # Build and save a candidate before replacing the live model.
+        fresh = Wolfe(self.tools_path, self.examples_path)
+        if fresh.identity != self.identity:
+            raise ValueError('definitions changed; reload model before correcting')
+        fresh.accepted, fresh.rejected = self.accepted[:], self.rejected[:]
+        fresh.corrections = [dict(item, arguments=dict(item['arguments'])) for item in self.corrections]
+        existing = next((i for i, item in enumerate(fresh.corrections) if item['text'] == record['text']), None)
+        if existing is None:
+            if len(fresh.corrections) == MAX_CORRECTIONS:
+                del fresh.corrections[0]
+            fresh.corrections.append(record)
+        else:
+            fresh.corrections[existing] = record
+        fresh._rebuild_field()
+        fresh.state_path = path
+        fresh._save_state(path)
+        self.__dict__.update(fresh.__dict__)
+        return {'status': 'corrected', 'corrections': len(self.corrections)}
 
     def feedback(self, result, kind, path=None):
         path = path or self.state_path
@@ -1029,25 +1300,22 @@ class Wolfe:
         if result['status'] != 'call':
             raise ValueError('feedback requires a complete call')
         winner = [tool.name for tool in self.tools].index(result['calls'][0]['name'])
+        previous = self.accepted[winner], self.rejected[winner]
         if self.accepted[winner] + self.rejected[winner] >= 65535:
             self.accepted[winner] //= 2
             self.rejected[winner] //= 2
         (self.accepted if kind == 'accepted' else self.rejected)[winner] += 1
-        state = {'version': 1, 'identity': f'{self.identity:016x}', 'tools': {tool.name: {'accepted': self.accepted[i], 'rejected': self.rejected[i]} for i, tool in enumerate(self.tools)}}
-        if len(os.fsencode(path)) + 5 >= 4096:
-            raise ValueError('state path too long')
-        temporary = str(path) + '.tmp'
         try:
-            pathlib.Path(temporary).write_text(json.dumps(state, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
-            os.replace(temporary, path)
-        except OSError as error:
-            raise ValueError('state write failed') from error
+            self._save_state(path)
+        except (ValueError, OSError):
+            self.accepted[winner], self.rejected[winner] = previous
+            raise
 
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     begun = time.process_time()
-    options = {'tools': 'tools.json', 'examples': 'examples.jsonl', 'state': None, 'feedback': None, 'mode': 'neural'}
+    options = {'tools': 'tools.json', 'examples': 'examples.jsonl', 'state': None, 'feedback': None, 'mode': 'neural', 'correct': None}
     batch = reasoning = stats = False
     positional = []
     index = 0
@@ -1055,15 +1323,17 @@ def main(argv=None):
         while index < len(argv):
             arg = argv[index]
             if arg in ('--help', '-h'):
-                print('WOLFE — Weightless Ontological Language Function Engine\nUsage: python3 wolfe.py [--tools PATH] [--examples PATH] [--reasoning] [--mode neural|field|keyword] [--batch] [--state PATH] [--feedback accepted|rejected] [--stats] [query]\nNo tools are executed. A request emits at most one validated call.')
+                print('WOLFE — Weightless Ontological Language Function Engine\nUsage: python3 wolfe.py [--tools PATH] [--examples PATH] [--reasoning | --reasoning-compact] [--mode neural|field|keyword] [--batch] [--state PATH] [--feedback accepted|rejected] [--correct PATH] [--stats] [query]\nNo tools are executed. A request emits at most one validated call.')
                 return 0
             if arg in ('--reasoning', '--explain'):
                 reasoning = True
+            elif arg == '--reasoning-compact':
+                reasoning = 2
             elif arg == '--batch':
                 batch = True
             elif arg == '--stats':
                 stats = True
-            elif arg in ('--tools', '--examples', '--state', '--feedback', '--mode'):
+            elif arg in ('--tools', '--examples', '--state', '--feedback', '--mode', '--correct'):
                 index += 1
                 if index == len(argv):
                     raise ValueError('missing option value')
@@ -1086,7 +1356,19 @@ def main(argv=None):
             raise ValueError('--batch cannot take a positional query')
         if batch and options['feedback']:
             raise ValueError('batch feedback must not implicitly mark every request; use individual requests')
+        if options['correct'] and not options['state']:
+            raise ValueError('correction requires --state')
+        if options['correct'] and (batch or text or options['feedback']):
+            raise ValueError('--correct cannot be combined with query, batch or feedback')
         model = Wolfe(options['tools'], options['examples'], options['state'])
+        if options['correct']:
+            data = read_file(options['correct'])
+            if len(data) > 65535:
+                raise ValueError('correction exceeds 65535 bytes')
+            record = strict_json(data)
+            result = model.correct(record)
+            print(json.dumps(result, ensure_ascii=False, separators=(',', ':')))
+            return 0
     except (ValueError, OSError, UnicodeError) as error:
         print('WOLFE: ' + str(error), file=sys.stderr)
         return 2
