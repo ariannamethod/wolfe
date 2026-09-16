@@ -98,7 +98,7 @@ Two optional schema extensions keep extraction declarative:
 - `"x-aliases":{"true":["on","enabled"],"false":["off","disabled"]}` maps
   phrases to boolean or enum values.
 
-## What is actually neural here?
+## neural part
 
 The corpus constructs token vectors from signed lexical projections and
 distance-weighted co-occurrence. These are the metaweights: numerical
