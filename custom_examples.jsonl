@@ -1,0 +1,42 @@
+{"text": "move the package to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "send the parcel to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "deliver this package to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "take the parcel to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "please move my package to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "relocate the package to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "the package should go to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "bring the parcel to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "transport the package to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "send this package over to {destination}", "tool": "move_package", "arguments": {"destination": "{destination}"}}
+{"text": "set the kitchen lamp to 40 percent", "tool": "set_lamp", "arguments": {"room": "kitchen", "brightness": 40}}
+{"text": "make the study lamp 70 percent bright", "tool": "set_lamp", "arguments": {"room": "study", "brightness": 70}}
+{"text": "set bedroom brightness to 25", "tool": "set_lamp", "arguments": {"room": "bedroom", "brightness": 25}}
+{"text": "dim the kitchen lamp to 10 percent", "tool": "set_lamp", "arguments": {"room": "kitchen", "brightness": 10}}
+{"text": "bring the study lamp up to 90 percent", "tool": "set_lamp", "arguments": {"room": "study", "brightness": 90}}
+{"text": "change the bedroom lamp to 60 percent", "tool": "set_lamp", "arguments": {"room": "bedroom", "brightness": 60}}
+{"text": "put the kitchen lamp at 100 percent", "tool": "set_lamp", "arguments": {"room": "kitchen", "brightness": 100}}
+{"text": "reduce study brightness to 20", "tool": "set_lamp", "arguments": {"room": "study", "brightness": 20}}
+{"text": "I want the bedroom lamp at 35 percent", "tool": "set_lamp", "arguments": {"room": "bedroom", "brightness": 35}}
+{"text": "please adjust the kitchen lamp to 55 percent", "tool": "set_lamp", "arguments": {"room": "kitchen", "brightness": 55}}
+{"text": "turn the device on", "tool": "switch_device", "arguments": {"power": true}}
+{"text": "turn the device off", "tool": "switch_device", "arguments": {"power": false}}
+{"text": "switch the device on", "tool": "switch_device", "arguments": {"power": true}}
+{"text": "switch the device off", "tool": "switch_device", "arguments": {"power": false}}
+{"text": "set device power to enabled", "tool": "switch_device", "arguments": {"power": true}}
+{"text": "set device power to disabled", "tool": "switch_device", "arguments": {"power": false}}
+{"text": "please power the device on", "tool": "switch_device", "arguments": {"power": true}}
+{"text": "please power the device off", "tool": "switch_device", "arguments": {"power": false}}
+{"text": "I need the device enabled", "tool": "switch_device", "arguments": {"power": true}}
+{"text": "I need the device disabled", "tool": "switch_device", "arguments": {"power": false}}
+{"text": "hello", "tool": null, "arguments": {}}
+{"text": "thank you", "tool": null, "arguments": {}}
+{"text": "what is the weather in Rome", "tool": null, "arguments": {}}
+{"text": "play classical music", "tool": null, "arguments": {}}
+{"text": "set a timer for five minutes", "tool": null, "arguments": {}}
+{"text": "do not move the package", "tool": null, "arguments": {}}
+{"text": "do not change the lamp brightness", "tool": null, "arguments": {}}
+{"text": "do not turn the device on", "tool": null, "arguments": {}}
+{"text": "do not turn the device off", "tool": null, "arguments": {}}
+{"text": "the package arrived yesterday", "tool": null, "arguments": {}}
+{"text": "how do lamps work", "tool": null, "arguments": {}}
+{"text": "I am thinking about buying a new device", "tool": null, "arguments": {}}

@@ -1,0 +1,77 @@
+{
+  "tools": [
+    {
+      "name": "move_package",
+      "description": "Move a package to the requested delivery destination.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "destination": {
+            "type": "string",
+            "description": "Destination address or place for the package."
+          }
+        },
+        "required": [
+          "destination"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "set_lamp",
+      "description": "Set the lamp brightness in the requested room.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "room": {
+            "type": "string",
+            "enum": [
+              "kitchen",
+              "study",
+              "bedroom"
+            ],
+            "description": "Room containing the lamp."
+          },
+          "brightness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Lamp brightness as a percentage."
+          }
+        },
+        "required": [
+          "room",
+          "brightness"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "switch_device",
+      "description": "Switch the device power on or off.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "power": {
+            "type": "boolean",
+            "description": "Whether the device should be powered on.",
+            "x-aliases": {
+              "true": [
+                "on",
+                "enabled"
+              ],
+              "false": [
+                "off",
+                "disabled"
+              ]
+            }
+          }
+        },
+        "required": [
+          "power"
+        ],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
