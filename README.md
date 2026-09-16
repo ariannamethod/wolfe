@@ -271,6 +271,13 @@ errors, not silent truncation. Definitions are bounded to 4 MiB per file; the
 The wolf does not need to know everything. It needs to know which function you
 meant, what belongs in its arguments, and when the evidence is insufficient.
 
+## Doom experiment
+
+[The Doom adapter](doom/README.md) connects the existing C engine to a real
+ViZDoom player through six primitive tools. The first episode and its decision
+receipts establish the environment connection; experience updates and self-play
+remain the next research step.
+
 ## Family
 
 - [PostGPT](https://github.com/ariannamethod/postgpt) — corpus-derived metaweights.

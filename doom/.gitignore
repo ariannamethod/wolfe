@@ -1,0 +1,5 @@
+.venv/
+.build/
+__pycache__/
+runs/
+_vizdoom.ini

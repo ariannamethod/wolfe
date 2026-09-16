@@ -1,0 +1,64 @@
+{
+  "tools": [
+    {
+      "name": "turn_left",
+      "description": "Hold the left rotation button for one decision quantum",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "turn_right",
+      "description": "Hold the right rotation button for one decision quantum",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "move_forward",
+      "description": "Hold the forward movement button for one decision quantum",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "strafe_left",
+      "description": "Hold the left sideways movement button for one decision quantum",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "strafe_right",
+      "description": "Hold the right sideways movement button for one decision quantum",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "shoot",
+      "description": "Hold the attack button for one decision quantum",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
