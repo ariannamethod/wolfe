@@ -2,7 +2,7 @@
 
 The C parser shares error scratch across model instances. All API operations
 through this module are serialized; any other caller of the same C library
-must also serialize access. No state file, correction, or feedback is used.
+must also serialize access. State and explicit corrections are opt-in.
 """
 
 import ctypes
@@ -27,6 +27,7 @@ class Wolfe:
         library: str | os.PathLike[str],
         tools: str | os.PathLike[str],
         examples: str | os.PathLike[str],
+        state: str | os.PathLike[str] | None = None,
     ) -> None:
         self._handle = None
         self._lib = ctypes.CDLL(os.fspath(library))
@@ -49,6 +50,8 @@ class Wolfe:
             ctypes.POINTER(ctypes.c_size_t),
         ]
         self._lib.wolfe_call.restype = ctypes.c_int
+        self._lib.wolfe_correct.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        self._lib.wolfe_correct.restype = ctypes.c_int
         self._lib.wolfe_error.argtypes = [ctypes.c_void_p]
         self._lib.wolfe_error.restype = ctypes.c_char_p
         self._lib.wolfe_free.argtypes = [ctypes.c_void_p]
@@ -56,12 +59,14 @@ class Wolfe:
 
         tools_bytes = os.fsencode(tools)
         examples_bytes = os.fsencode(examples)
-        if b"\0" in tools_bytes or b"\0" in examples_bytes:
-            raise ValueError("WOLFE definition paths must not contain NUL")
+        state_bytes = None if state is None else os.fsencode(state)
+        if any(b"\0" in path for path in [tools_bytes, examples_bytes, state_bytes]
+               if path is not None):
+            raise ValueError("WOLFE paths must not contain NUL")
         error = ctypes.create_string_buffer(256)
         with _API_LOCK:
             self._handle = self._lib.wolfe_load(
-                tools_bytes, examples_bytes, None, error, len(error)
+                tools_bytes, examples_bytes, state_bytes, error, len(error)
             )
             if not self._handle:
                 message = error.value.decode("utf-8", errors="replace")
@@ -104,6 +109,24 @@ class Wolfe:
                     "utf-8", errors="replace"
                 )
                 raise RuntimeError(f"WOLFE call failed ({status}): {message}")
+
+    def correct(self, record: dict[str, Any]) -> None:
+        """Validate, persist, and rebuild one correction through the C API."""
+        if not isinstance(record, dict):
+            raise TypeError("WOLFE correction must be a dict")
+        # JSON escapes embedded NUL; the C parser rejects it when decoding.
+        # All correction fields and argument schema checks belong to C.
+        encoded = json.dumps(record, allow_nan=False).encode("utf-8")
+        with _API_LOCK:
+            if not self._handle:
+                raise RuntimeError("WOLFE model is closed")
+            status = self._lib.wolfe_correct(self._handle, encoded)
+            if status != _OK:
+                error = self._lib.wolfe_error(self._handle)
+                message = (error or b"unknown error").decode(
+                    "utf-8", errors="replace"
+                )
+                raise RuntimeError(f"WOLFE correction failed ({status}): {message}")
 
     def close(self) -> None:
         """Release the C model; repeated closes are harmless."""

@@ -274,9 +274,10 @@ meant, what belongs in its arguments, and when the evidence is insufficient.
 ## Doom experiment
 
 [The Doom adapter](doom/README.md) connects the existing C engine to a real
-ViZDoom player through six primitive tools. The first episode and its decision
-receipts establish the environment connection; experience updates and self-play
-remain the next research step.
+ViZDoom player through six primitive tools. Game reward has selected one
+persistent example correction, with improved returns on 14 of 16 separate
+evaluation seeds and regressions on two. The experiment exposes its initial
+prior, raw decisions, and limits; multiplayer self-play remains unexplored.
 
 ## Family
 

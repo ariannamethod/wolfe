@@ -108,6 +108,7 @@ def main():
     parser.add_argument("--seed", type=int, default=17)
     parser.add_argument("--decisions", type=int, default=128)
     parser.add_argument("--visible", action="store_true")
+    parser.add_argument("--state", type=Path, help="Load a fixed WOLFE memory; never update it during an episode")
     args = parser.parse_args()
     if args.decisions <= 0:
         parser.error("--decisions must be positive")
@@ -133,9 +134,10 @@ def main():
         game.set_available_game_variables(list(VARIABLES.values()))
         game.set_episode_timeout(QUANTUM * args.decisions + 10)
         metadata = {
-            "stage": "environment_connection_only", "seed": args.seed,
+            "stage": "fixed_policy_episode", "seed": args.seed,
             "decision_quantum": QUANTUM, "max_decisions": args.decisions,
             "prior_seed": 1729, "learning": False, "vizdoom": vzd.__version__,
+            "state_sha256": digest(args.state) if args.state is not None else None,
             "wolfe": build, "buttons": [button.name for button in BUTTONS.values()],
             "scenario_sha256": digest(config.with_suffix(".wad")),
             "scenario_config_sha256": digest(config),
@@ -149,7 +151,7 @@ def main():
         changed = 0
         elapsed = 0
         records = 0
-        with Wolfe(library, ROOT / "tools.json", ROOT / "initial_examples.jsonl") as wolf, \
+        with Wolfe(library, ROOT / "tools.json", ROOT / "initial_examples.jsonl", state=args.state) as wolf, \
                 (output / "trajectory.jsonl").open("w") as journal, \
                 (output / "trace.txt").open("w") as trace:
             while not game.is_episode_finished() and records < args.decisions:
