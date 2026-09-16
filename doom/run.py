@@ -55,14 +55,25 @@ def snapshot(game):
     }
 
 
-def observation(raw, width):
+def focus_label(raw, perception="legacy"):
+    """Select the original largest label, optionally excluding two effects."""
+    if perception not in {"legacy", "no-effects"}:
+        raise ValueError(f"Unknown perception mode: {perception}")
+    excluded = {"DoomPlayer"}
+    if perception == "no-effects":
+        excluded.update({"Blood", "BulletPuff"})
+    visible = [item for item in raw["labels"] if item["name"] not in excluded]
+    return max(visible, key=lambda obj: (obj["width"] * obj["height"], -obj["id"]),
+               default=None)
+
+
+def observation(raw, width, perception="legacy"):
     values = raw["variables"]
     health = "healthlow" if values["health"] <= 25 else "healthmid" if values["health"] <= 75 else "healthhigh"
     ammo = "ammopresent" if values["ammo"] > 0 else "ammoabsent"
-    visible = [item for item in raw["labels"] if item["name"] != "DoomPlayer"]
+    item = focus_label(raw, perception)
     view = "sceneempty"
-    if visible:
-        item = max(visible, key=lambda obj: (obj["width"] * obj["height"], -obj["id"]))
+    if item is not None:
         center = item["x"] + item["width"] / 2
         view = "sceneleft" if center < width / 3 else "sceneright" if center > 2 * width / 3 else "scenecenter"
     return f"{health} {ammo} {view}"
@@ -109,6 +120,8 @@ def main():
     parser.add_argument("--decisions", type=int, default=128)
     parser.add_argument("--visible", action="store_true")
     parser.add_argument("--state", type=Path, help="Load a fixed WOLFE memory; never update it during an episode")
+    parser.add_argument("--perception", choices=["legacy", "no-effects"], default="legacy",
+                        help="Select the largest label, optionally excluding Blood and BulletPuff")
     args = parser.parse_args()
     if args.decisions <= 0:
         parser.error("--decisions must be positive")
@@ -137,6 +150,9 @@ def main():
             "stage": "fixed_policy_episode", "seed": args.seed,
             "decision_quantum": QUANTUM, "max_decisions": args.decisions,
             "prior_seed": 1729, "learning": False, "vizdoom": vzd.__version__,
+            "perception": args.perception,
+            "excluded_names": (["DoomPlayer", "Blood", "BulletPuff"]
+                               if args.perception == "no-effects" else ["DoomPlayer"]),
             "state_sha256": digest(args.state) if args.state is not None else None,
             "wolfe": build, "buttons": [button.name for button in BUTTONS.values()],
             "scenario_sha256": digest(config.with_suffix(".wad")),
@@ -156,13 +172,14 @@ def main():
                 (output / "trace.txt").open("w") as trace:
             while not game.is_episode_finished() and records < args.decisions:
                 before = snapshot(game)
-                text = observation(before, game.get_screen_width())
+                text = observation(before, game.get_screen_width(), args.perception)
                 response = wolf.call(text)
                 name, buttons, fallback = action_vector(response)
                 reward = float(game.make_action(buttons, QUANTUM))
                 after = snapshot(game)
                 actual_tics = after["tic"] - before["tic"]
                 record = {"decision": records, "before": before, "input": text,
+                          "focus": focus_label(before, args.perception),
                           "response": response, "action": name,
                           "buttons": buttons, "executor_fallback": fallback,
                           "requested_tics": QUANTUM, "elapsed_tics": actual_tics,

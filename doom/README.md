@@ -152,4 +152,39 @@ to 18. Both corrections survived restart. Full results and raw examples,
 including wasted ammunition and remaining perception limits, are recorded in
 [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md); local artifacts are in `runs/memory2/`.
 
+## Compare perception with the same memory
+
+[STEP4.md](STEP4.md) isolates one observation change with the two-correction
+policy frozen:
+
+```sh
+.venv/bin/python perception.py --previous runs/my-second-memory \
+  --output runs/my-perception-comparison
+```
+
+It compares 16 matched seeds, 501–516. `legacy` uses the original largest
+nonplayer label; `no-effects` additionally excludes exactly `Blood` and
+`BulletPuff`. Other objects and all binning rules remain unchanged. This is
+filtering game-provided labels, not recognizing living enemies. The command
+requires the exact selected memory hash recorded in STEP4 and performs no
+learning. Each trajectory records its selected `focus` label.
+
+The output contains alternative encodings of the old selection states,
+32 real episodes, and the first action divergence from an identical raw state
+for each pair. `result.json` separates the observation mechanism from reward
+benefit, and reports kills, deaths, `shoot` calls, and ammunition consumed.
+Filtering does not imply less shooting: the existing memory can map the new
+empty-scene observation to `shoot`.
+
+Individual episodes accept `--perception no-effects`; `legacy` remains the
+default. Both modes use the same C policy and button executor.
+
+The first comparison passed the perception-mechanism check and **failed the
+benefit gate**. With identical memory, filtering improved one seed, worsened
+eleven, and tied four. Total reward fell from 13 to 3; deaths rose from 4 to 15.
+It consumed less ammunition and scored one more kill overall, but episodes
+also ended much earlier. The filter remains an opt-in experiment, not the
+adopted policy. All results are preserved locally in `runs/perception1/` and
+described in [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md).
+
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).

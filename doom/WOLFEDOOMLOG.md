@@ -2,6 +2,116 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-16 — removing transient labels hurts the frozen learned policy
+
+Step 3 was committed and pushed at Oleg's request as
+[`911a5b4`](https://github.com/ariannamethod/wolfe/commit/911a5b4805090a525cbbd933757f1ef2191e02e5),
+with unique `Quote:` and `Method:` lines. Its source/protocol hashes, raw
+selection/evaluation returns, selected state, and restart table were checked
+before publication. Arduino is a future user intention, outside this step.
+
+[STEP4.md](STEP4.md) declared one intervention before implementation or games:
+exclude exactly Blood and BulletPuff from the largest-label observation, keep
+the two-correction memory frozen, and compare against legacy on seeds 501–516.
+The existing DoomPlayer exclusion and all size/tie/bin rules remain unchanged.
+All other objects remain eligible; the filter does not classify live enemies.
+
+The incoming diagnosis used only old selection seeds 301–308. Of 1,005 raw
+decisions, 549 focused on effects: Blood 30, BulletPuff 519. All 549 lacked
+another eligible nonplayer label. Those effects kept the scene nonempty;
+the evidence did not show an effect displacing a visible enemy. Offline replay
+of these states changes 549 inputs and 545 choices under the frozen table.
+In 240 cases the alternative changes move_forward to shoot, because the
+acquired mid-health empty-scene correction already favors shooting.
+
+A separate reader checked the exact intervention and paired-run code before
+new data. Command, run once:
+
+```sh
+.venv/bin/python perception.py --previous runs/memory2 --output runs/perception1
+```
+
+The selected memory remains
+`7342b16ea85139e4d19979984223bebecafe9e9c8b0461c86b72236aa2735005`.
+All 24 full C responses match the previous table. No correction or feedback
+was applied. Each condition uses fresh processes and the same memory, seed,
+actions, reward, and 128-decision horizon. The protocol, source hashes, and
+offline comparison were sealed before the new games.
+
+| Seed | Legacy reward | No-effects reward | Difference |
+| --- | ---: | ---: | ---: |
+| 501 | 1 | 0 | -1 |
+| 502 | 1 | 0 | -1 |
+| 503 | 1 | 0 | -1 |
+| 504 | 0 | 2 | 2 |
+| 505 | 2 | 0 | -2 |
+| 506 | 1 | 0 | -1 |
+| 507 | 1 | 0 | -1 |
+| 508 | 0 | 0 | 0 |
+| 509 | 0 | 0 | 0 |
+| 510 | 0 | 0 | 0 |
+| 511 | 1 | 0 | -1 |
+| 512 | 1 | 0 | -1 |
+| 513 | 1 | 0 | -1 |
+| 514 | 1 | 0 | -1 |
+| 515 | 1 | 1 | 0 |
+| 516 | 1 | 0 | -1 |
+
+| Aggregate | Legacy | No-effects |
+| --- | ---: | ---: |
+| Reward | 13 | 3 |
+| Kills | 17 | 18 |
+| Deaths | 4 | 15 |
+| Shoot calls | 967 | 511 |
+| Ammunition consumed | 375 | 159 |
+| Elapsed game tics | 8,082 | 5,194 |
+
+The perception mechanism passes: the filter changes real actions from matched
+raw states in all 16 pairs while preserving the C decision table. The benefit
+gate **fails**: one seed improves, eleven worsen, four tie; mean paired reward
+difference -0.625. Lower ammunition consumption accompanies shorter episodes
+and does not establish better shooting efficiency.
+
+Raw first divergence on seed 501, decision 3, tic 22:
+
+```text
+same state: health 100, ammo 25, angle 0, kills 1, position (0,0)
+only nonplayer label: Blood id=2, x=159, y=120, width=1, height=1
+legacy:    healthhigh ammopresent scenecenter -> shoot
+no-effects: healthhigh ammopresent sceneempty -> strafe_right
+```
+
+The legacy episode reaches tic 522 alive, health 14, ammo 0, reward +1. The
+filtered episode dies at tic 302, health -8, ammo 18, reward 0. This identifies
+the first direct effect of the observation change; it does not assign all
+later damage to that single action.
+
+The opposing case is also retained: seed 504 improves from one kill and death
+to two kills and reaching the horizon alive, reward 0 → 2. Seed 515 gets an
+extra kill but now dies, leaving reward tied at +1. No seed or outcome was
+discarded to make the comparison uniform.
+
+This rejects the proposed filter as an improvement for the existing frozen
+policy on these episodes. It does not test whether a policy learned under
+the filtered representation could do better. Its acquired action associations
+were selected under the original observation function; changing that function
+changes when those associations are invoked.
+
+All 32 episodes and 3,324 decisions remain in `runs/perception1/`, alongside
+full tables, the offline 1,005-state comparison, focused labels, paired first
+divergences, and actual frames. The 1,642-file inventory of both prior memory
+experiments remains byte-identical, with no files added or removed.
+An independent reader reconstructed focus and input directly from raw labels,
+without importing the adapter, and checked every full C response, button,
+record boundary, tic count, return, and ammo decrease. All 16 pairs have
+identical physical histories before their first shoot-to-strafe divergence.
+Hashes, the unchanged response table, both gate verdicts, the sole improvement,
+and the remaining counterexamples were confirmed without additional games.
+
+Legacy remains the default. The two-name filter remains available explicitly
+as an experiment. No retraining, other exclusions, changed seeds, longer
+horizon, or hardware work followed the failed gate. Return the turn to Oleg.
+
 ## 2026-09-16 — a second association survives beside the first
 
 At Oleg's request, step 2 was committed and pushed as
