@@ -275,4 +275,40 @@ All 344 episodes, 32,757 decisions, proposals, and restart evidence remain
 locally in `runs/joint1/`; see [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md) for raw behavior
 and remaining failures. No history token, new reward, or C-core change was used.
 
+## Revisit an acquired empty-scene reaction
+
+[STEP7.md](STEP7.md) tests one correction originally acquired under legacy
+perception, `healthmid ammopresent sceneempty → shoot`, against the current
+four-correction parent:
+
+```sh
+.venv/bin/python revise.py --previous runs/my-joint-search \
+  --legacy-memory runs/my-perception-comparison/memory.json \
+  --output runs/my-revision
+```
+
+The diagnosis comes from the parent's earlier selection trajectories: long
+runs of shooting with no filtered focus, no new kills, and ammunition and
+health decreasing. All six actions compete; the replacement is not prescribed.
+Each candidate replaces that one acquired record and must preserve the other
+three records and 23 runtime decisions before games.
+
+Selection uses the unchanged episode reward on seeds 1001–1008, with parent
+winning ties. A strict improvement must survive restart before the three-way
+comparison on 1101–1116. Target visits, shooting, ammunition, damage, and
+consecutive runs are descriptive outputs alongside kills and survival. The
+command stops after this single revision experiment, including NO_ADOPTION.
+
+The first revision experiment ended in **NO_ADOPTION**. All six proposals
+preserved the other 23 choices, but the existing shoot reaction scored 43
+across the eight selection seeds; alternatives scored 39–42. The parent
+survived seven episodes and each alternative six. The closest alternative,
+turn_left, shortened the longest target run from 24 calls to four while adding
+one death. Improving that local measurement did not improve episode return.
+
+All 56 episodes and 7,024 decisions remain in `runs/revision1/`. No replacement
+memory was adopted and the reserved evaluation seeds were not run. The
+four-correction player from STEP6 remains the selected policy. See the
+[log](WOLFEDOOMLOG.md) for raw sequences and the full selection table.
+
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).

@@ -2,6 +2,121 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — revisit the acquired mid-health empty-scene reaction
+
+Oleg authorized publishing STEP6 and two actual screenshots, then continuing
+one bounded learning step. STEP6 is committed as
+[`873c09f`](https://github.com/ariannamethod/wolfe/commit/873c09f);
+the frames and README update as
+[`f4e2812`](https://github.com/ariannamethod/wolfe/commit/f4e28129d04ad5edfd65185eebfda834753a701d).
+Both were pushed to main, whose remote hash was checked. Their unique Quote
+and Method lines are part of the history.
+
+The incoming reader reproduced STEP6's selection, restart, raw evaluation,
+survival deficit, and source/state hashes. New diagnosis used only the
+selected child's training seeds 801–808: 1,024 decisions, all eight episodes
+alive at the fixed horizon. There were six high-to-mid and four mid-to-low
+health transitions. The acquired `healthmid ammopresent sceneempty → shoot`
+reaction was visited 75 times across four seeds, consuming 21 rounds, losing
+82 health, and gaining zero kills during those action windows.
+
+The most frequent uncorrected context was mid-health left, with 113 visits.
+This step instead explicitly investigates the old empty-scene correction.
+On seed 806, decisions 79–112 form 34 consecutive empty-scene shoot calls:
+ammunition 14 -> 5, health 44 -> 16, no new kills. Seed 805 has 26 such calls
+at decisions 102–127, ammunition 14 -> 6 and health 46 -> 32. Neither diagnosis
+claims the shots caused damage or predicts which replacement must help.
+
+[STEP7.md](STEP7.md) declares six independent replacements for this one memory
+record, preserving the other three records and 23 runtime decisions. All six
+actions compete under the unchanged game reward; shoot remains a control.
+Selection uses seeds 1001–1008, with parent winning ties. Any strict winner
+must reproduce all 24 responses after restart before fresh parent/child/legacy
+evaluation on 1101–1116. A separate reader checked the declared contract.
+
+The new `revise.py` reuses the existing game and episode readers. It passed
+syntax/CLI checks and an independent pre-data review before the single run:
+
+```sh
+.venv/bin/python revise.py --previous runs/joint1 \
+  --legacy-memory runs/perception1/memory.json --output runs/revision1
+```
+
+All six proposals passed the structural gate before games. Each changes only
+the requested second correction record, retains exactly four records and zero
+counters, and realizes its requested call with all other 23 decisions fixed.
+
+Selection on seeds 1001–1008:
+
+| Target action | Reward | Kills | Deaths | Longest target run |
+| --- | ---: | ---: | ---: | ---: |
+| Unmodified parent (shoot) | **43** | 44 | **1** | 24 |
+| turn_left | 42 | 44 | 2 | 4 |
+| turn_right | 40 | 42 | 2 | 16 |
+| move_forward | 39 | 41 | 2 | 80 |
+| strafe_left | 41 | 43 | 2 | 4 |
+| strafe_right | 41 | 43 | 2 | 80 |
+| shoot control | **43** | 44 | **1** | 24 |
+
+No candidate strictly improved the parent. The result is **NO_ADOPTION**;
+benefit is **NOT_RUN**. No `selected-memory.json`, restart of a selected child,
+or evaluation directory was created. The reserved seeds 1101–1116 were not
+used, and no fresh comparison with legacy was claimed. The STEP6 policy stays
+selected. This is a completed negative experiment, not a failed execution.
+
+Complete selection returns, preserving ties and losses:
+
+| Seed | Parent | Left | Right | Forward | Strafe left | Strafe right | Shoot control |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1001 | 5 | 5 | 5 | 5 | 5 | 5 | 5 |
+| 1002 | 4 | 3 | 4 | 2 | 2 | 2 | 4 |
+| 1003 | 4 | 4 | 4 | 4 | 4 | 4 | 4 |
+| 1004 | 10 | 10 | 10 | 10 | 10 | 10 | 10 |
+| 1005 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
+| 1006 | 3 | 3 | 3 | 3 | 3 | 3 | 3 |
+| 1007 | 6 | 6 | 6 | 6 | 6 | 6 | 6 |
+| 1008 | 5 | 5 | 2 | 3 | 5 | 5 | 5 |
+
+Three seeds never visit the target under the parent, so identical results
+there do not establish anything about the replacement. The parent visits it
+50 times across the remaining five seeds, fires on all 50, and consumes 13
+rounds during those windows. The turn_left candidate visits it 11 times,
+never issues shoot there, and records no health loss in those windows.
+Nevertheless its total death count is higher. These are measurements within
+action windows, not causal credit for the command active at the time.
+
+The closest candidate's one reward regression, seed 1002, is visible in raw
+behavior. Both players have health 72, ammo 23, three kills and angle 226.75781
+at decision 57, with the same empty observation. The parent shoots and keeps
+its angle; the candidate turns left to 233.78906. At 58 the candidate sees a
+left-side actor and enters the unchanged mid-health left -> shoot reaction.
+Later it reaches a centered actor at decisions 82–85 but uses the unchanged
+mid-health center -> move_forward reaction. It gets its fourth kill at 92,
+turns through four empty observations at 93–96, then loses health 56 -> 24 at
+97 with a left-side actor in view. At decision 111 it dies during the unchanged
+low-health empty -> strafe_right reaction, finishing with four kills and
+reward 3. The parent reaches decision 128 alive with four kills, health 8,
+and reward 4. This describes the divergent sequences; it does not assign the
+whole death to a single neighboring reaction.
+
+The earlier high-health alternating-context windows remain zero in all seven
+selection conditions. Resolving those windows remains intact, while changing
+the diagnosed mid-health empty reaction alone does not produce a better
+candidate on these eight seeds. The experiment does not establish that shoot
+is generally optimal, or that a coordinated revision elsewhere cannot help.
+
+All 56 real episodes and 7,024 decisions are retained in `runs/revision1/`.
+All 6,303 previous artifact files remain byte-identical, with no additions or
+removals in sealed directories. Source, protocol, inherited inputs, parent,
+and candidate hashes remain fixed. An independent reader checked all 56
+episodes and 7,024 full decision records, structural eligibility, hashes,
+target/loop/survival statistics, and the seed-1002 regression. The shoot control
+has the same state hash and all eight physical histories as the parent.
+Its new `independent-audit.json` reports zero discrepancies and confirms that
+no evaluation or selected-child restart was run. The declared stopping rule is honored;
+no replacement action, second context, reward change, or new seed set is
+introduced after this result.
+
 ## 2026-09-17 — publish the joint-memory step and two actual game frames
 
 Oleg authorized publishing STEP6, adding two screenshots to the README, and

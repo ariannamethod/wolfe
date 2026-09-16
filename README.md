@@ -275,8 +275,8 @@ meant, what belongs in its arguments, and when the evidence is insufficient.
 
 [The Doom adapter](doom/README.md) connects the existing C engine to a real
 ViZDoom player through six primitive tools. Bounded experiments select
-persistent example corrections using game reward. The latest searched 36
-neighboring action pairs: on 16 fresh seeds, kills rose from 24 to 90 and
+persistent example corrections using game reward. A search over 36
+neighboring action pairs raised kills from 24 to 90 on 16 fresh seeds, and
 deaths fell from 13 to 6 against its immediate parent. An older perception
 mode still survived more often, with four deaths on those same seeds.
 The initial prior, raw behavior, and limitations are documented;
