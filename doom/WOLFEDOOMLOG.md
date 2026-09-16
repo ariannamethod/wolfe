@@ -2,6 +2,128 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-16 — inherited memory adapts to the filtered scene
+
+Oleg authorized continuing the adaptation investigation and repairing the
+mechanism if necessary. The incoming raw audit reproduced STEP4's failed
+benefit: reward 13 → 3, one improvement, eleven regressions, four ties. Its
+seven exact source files were archived in `runs/perception1-source/` before
+editing the shared experience driver. The failed result was not rewritten.
+No commit or push was requested for this turn.
+
+[STEP5.md](STEP5.md) declared one new memory association under unchanged
+no-effects perception. Context selection used the older historical-input
+receipt from training seeds 301–308, not STEP4's evaluation rewards. In each
+of the eight trajectories, the first changed choice at an uncorrected input
+was decision 3, `healthhigh ammopresent sceneempty`. The context therefore
+received all eight votes. The old legacy action did not prescribe the target:
+all six actions competed through new game outcomes.
+
+A separate reader checked the declared contract and implementation before
+the command was run once:
+
+```sh
+.venv/bin/python experience.py adapt --previous runs/perception1 --output runs/adaptation1
+```
+
+Selection, seeds 601–608, with no-effects perception throughout:
+
+| Candidate third association | Return sum |
+| --- | ---: |
+| Unmodified filtered parent | 2 |
+| turn_left | 11 |
+| turn_right | 8 |
+| move_forward | 2 |
+| strafe_left | 2 |
+| strafe_right | 2 |
+| shoot | 6 |
+
+`turn_left` won. Its memory contains the two original correction records plus
+`healthhigh ammopresent sceneempty → turn_left`. The old corrected inputs still
+choose shoot; all counters remain zero. Exactly one of the 24 choices changes,
+from strafe_right to turn_left. The complete table matches after process
+restart. The selected state hash is
+`31fa2dc243e9aca6c7bfce5444a06c203fa08db178de8349ec8b99fc359b9b92`.
+
+Selection was sealed before seeds 701–716. Each evaluation seed ran the
+filtered parent, filtered child, and the old parent under legacy perception.
+The legacy reference did not influence selection or the primary benefit gate.
+
+| Seed | Filtered parent | Filtered child | Legacy reference |
+| --- | ---: | ---: | ---: |
+| 701 | 0 | 1 | 1 |
+| 702 | 0 | 0 | 1 |
+| 703 | 0 | 1 | 1 |
+| 704 | 0 | 2 | 0 |
+| 705 | 0 | 1 | 1 |
+| 706 | 0 | 0 | 0 |
+| 707 | 0 | 0 | 1 |
+| 708 | 0 | 0 | 1 |
+| 709 | 1 | 0 | 1 |
+| 710 | 0 | 2 | 1 |
+| 711 | 0 | 1 | 0 |
+| 712 | 4 | 1 | 1 |
+| 713 | 0 | 2 | 1 |
+| 714 | 0 | 1 | 0 |
+| 715 | 0 | 1 | 1 |
+| 716 | 0 | 0 | 0 |
+
+| Aggregate | Filtered parent | Filtered child | Legacy reference |
+| --- | ---: | ---: | ---: |
+| Reward | 5 | 13 | 11 |
+| Kills | 20 | 28 | 16 |
+| Deaths | 15 | 15 | 5 |
+
+The adaptation mechanism and benefit gates pass. Against the filtered parent,
+nine seeds improve, two worsen, five tie; mean paired return difference +0.5.
+The two regressions remain: seed 709 falls 1 → 0; seed 712 falls 4 → 1, losing
+two kills and changing a horizon-surviving episode into a death.
+
+Against the legacy reference, five seeds improve, four worsen, seven tie;
+mean difference +0.125. The child's sample total reward exceeds the reference
+by two points, but it dies ten more times. This does not establish recovery
+of the legacy policy's survival or general superiority.
+
+Raw behavior on seed 701:
+
+```text
+decision 2: healthhigh ammopresent scenecenter, focus MarineChainsawVzd
+  shoot; first kill, reward +1
+decision 3: healthhigh ammopresent sceneempty, focus null
+  turn_left; angle 0 -> 7.03125
+decision 4: same empty input -> turn_left; angle 7.03125 -> 19.33594
+decision 5: same empty input -> turn_left; angle 19.33594 -> 33.39844
+decision 6: healthhigh ammopresent sceneleft, focus Demon
+  turn_right; angle 33.39844 -> 19.33594
+decision 7: empty again -> turn_left; angle 19.33594 -> 33.39844
+decision 80: healthlow ammopresent sceneleft, focus Demon
+  shoot; second kill, reward +1
+decision 100: healthlow ammopresent sceneempty -> strafe_right
+  health 12 -> 0; death, reward -1
+```
+
+The new turn exposes another actor, but an old opposite-turn association
+still causes aiming oscillation. That remaining behavior is visible beside
+the aggregate gain. Seed 710 reaches the horizon alive with two kills; most
+other child episodes still end in death. No extra correction was added after
+seeing these outcomes.
+
+All 104 episodes and 10,376 decisions remain in `runs/adaptation1/`, including
+the six candidates, context witnesses, full tables, restart, and three-way
+evaluation. All 1,954 prior artifact/source files remain byte-identical, with
+no files added or removed inside their sealed directories. Both acquired
+choices survived the change; neither the C core nor perception was edited
+in this step.
+
+An independent reader reconstructed focus and input from raw labels, checked
+every full C response, button, state boundary, tic count, and return, and
+confirmed selection, memory retention, restart, and both comparisons. The
+strafe-right control reproduces all parent selection histories. In every
+parent-child evaluation pair, the first action difference is decision 3 from
+the same raw state and input: strafe_right → turn_left. Both regressions and
+the survival deficit against legacy were confirmed. The passed gate ends
+this turn and returns the result to Oleg.
+
 ## 2026-09-16 — removing transient labels hurts the frozen learned policy
 
 Step 3 was committed and pushed at Oleg's request as

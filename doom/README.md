@@ -187,4 +187,44 @@ also ended much earlier. The filter remains an opt-in experiment, not the
 adopted policy. All results are preserved locally in `runs/perception1/` and
 described in [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md).
 
+## Adapt memory to the filtered observation
+
+[STEP5.md](STEP5.md) tests one additional inherited association under the
+fixed no-effects observation:
+
+```sh
+.venv/bin/python experience.py adapt --previous runs/my-perception-comparison \
+  --output runs/my-adaptation
+```
+
+The old historical-state comparison chooses the most frequent first affected
+uncorrected input across eight earlier trajectories. Six independent children
+inherit both existing corrections and each try one action for that input.
+New game returns on seeds 601–608 select a child, with the parent winning ties.
+The two acquired choices and all 24 responses must survive the memory checks
+and process restart before evaluation.
+
+Seeds 701–716 compare three fixed conditions: filtered parent, filtered child,
+and the parent under legacy perception. The benefit gate compares the child
+with the filtered parent. The legacy reference separately shows whether that
+gain recovers the earlier policy's performance; it does not choose a child.
+The command performs one generation, preserving all candidates and outcomes.
+
+The first adaptation selected `turn_left` for
+`healthhigh ammopresent sceneempty`. It retained both earlier choices and
+survived restart. On the 16 fresh seeds, reward rose from 5 to 13 against the
+filtered parent: nine improvements, two regressions, five ties. Kills rose
+from 20 to 28; both policies died in 15 episodes.
+
+The separate legacy reference scored reward 11, 16 kills, and five deaths.
+Thus the adapted policy slightly exceeded that reference's total reward on
+this sample, while surviving much less often. Remaining aiming oscillations
+and both primary regressions are recorded in [WOLFEDOOMLOG.md](WOLFEDOOMLOG.md).
+Local artifacts are in `runs/adaptation1/`. To inspect the selected child:
+
+```sh
+.venv/bin/python run.py --state runs/my-adaptation/selected-memory.json \
+  --perception no-effects --output runs/inspect-adaptation --seed 701
+```
+
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).
