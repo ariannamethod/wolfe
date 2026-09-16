@@ -2,6 +2,168 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — jointly revisit mid-health center and empty-scene memory
+
+Oleg authorized continuing, publication, new screenshots, and a parallel
+review of the C engine. Incoming main was
+[`4cd8fba`](https://github.com/ariannamethod/wolfe/commit/4cd8fbae49cfa3a286344b4aae27416a8ea515ae).
+The previous independent raw audit confirmed STEP8's mechanism PASS and
+benefit FAIL. Its selected fifth-record shoot memory was not promoted.
+The retained parent is still the four-record STEP6 memory, SHA-256
+`ef1a98d8093aac0c8eed9c82d4903ab6fab9656e222a9a9f9258760d7352d369`.
+Nine exact STEP8 source files were archived in `runs/center1-source/` before
+editing the shared `joint.py` driver.
+
+The hypothesis originated openly from the previous evaluation's seed 1307:
+an earlier centered kill leaves mid health and enters the acquired empty-scene
+shoot reaction. It is not a training-only discovery. A separate old training
+witness, seed 1201, contains one center-to-empty transition after a kill,
+followed by 23 empty-scene shoot calls. That candidate actually improves the
+training return, so the sequence alone is not proof of harm.
+
+[STEP9.md](STEP9.md) fixes A = `healthmid ammopresent scenecenter` and
+B = `healthmid ammopresent sceneempty`. All 36 pairs start from the retained
+parent, append A first, and replace B in its original second slot. The other
+three acquired records and 22 runtime decisions must remain fixed. Selection
+uses only unmodified episode reward on 1401–1408; parent wins ties, and the
+first strict grid maximum wins candidate ties. Fresh evaluation is 1501–1516.
+No C change, history token, new reward, or further generation is included.
+
+Before games, syntax, CLI and whitespace checks passed. Read-only comparison
+with the archived implementation reproduced all 36 STEP6 eligibility receipts,
+344 old episode receipts and their aggregates; the old high-health loop
+function is unchanged. An independent reader reviewed the new contract and
+code before this single command:
+
+```sh
+.venv/bin/python joint.py --step9 --previous runs/center1 \
+  --legacy-memory runs/perception1/memory.json --output runs/joint-mid1
+```
+
+All 36 proposals passed structural eligibility. The parent-matching control,
+pair 17 (move_forward, shoot), reproduces all eight parent physical histories.
+Pair 35 (shoot, shoot) is byte-identical to STEP8's failed candidate; it is one
+proposal, never the inherited parent. Full selection reward grid, with A in
+rows and B in columns; parent reward is 40:
+
+| A \\ B | turn_left | turn_right | move_forward | strafe_left | strafe_right | shoot |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| turn_left | 38 | 38 | 38 | 37 | 38 | 38 |
+| turn_right | **42** | 42 | 42 | 41 | 42 | 42 |
+| move_forward | 40 | 40 | 40 | 39 | 40 | 40 |
+| strafe_left | 40 | 40 | 39 | 38 | 39 | 39 |
+| strafe_right | 41 | 40 | 40 | 39 | 39 | 39 |
+| shoot | 42 | 42 | 42 | 41 | 42 | 42 |
+
+Ten pairs tie at 42. The declared ordering selects pair 06: center turn_right,
+empty turn_left. Thus this sample does not uniquely identify either action
+as best. Pair 11 (turn_right, shoot) also scores 42 while retaining B, so a
+need to change both decisions is not established. Selection kills rise
+43 -> 45, with three deaths in both conditions.
+Selected memory SHA-256:
+`b52e4363e412bb4f12428836e05928c1774ccb7a2c77cd8e01adc14ef6b2a9b8`.
+The full 24-response table and five-record structural gate survive a separate
+process restart. Both target calls change; all other 22 stay fixed.
+
+Fresh evaluation returns:
+
+| Seed | Parent | Selected candidate | Legacy reference |
+| --- | ---: | ---: | ---: |
+| 1501 | 7 | 7 | 0 |
+| 1502 | 8 | 8 | 1 |
+| 1503 | 7 | 7 | 1 |
+| 1504 | 6 | 5 | 0 |
+| 1505 | 6 | 6 | 0 |
+| 1506 | 4 | 4 | 1 |
+| 1507 | 6 | 6 | 1 |
+| 1508 | 4 | 3 | 1 |
+| 1509 | 8 | 8 | 0 |
+| 1510 | 4 | 4 | 0 |
+| 1511 | 2 | 2 | 1 |
+| 1512 | 6 | 6 | 0 |
+| 1513 | 11 | 11 | 1 |
+| 1514 | 5 | 6 | 1 |
+| 1515 | 3 | 3 | 0 |
+| 1516 | 8 | 8 | 1 |
+
+| Aggregate | Parent | Selected candidate | Legacy reference |
+| --- | ---: | ---: | ---: |
+| Reward | 95 | 94 | 9 |
+| Kills | 99 | 99 | 17 |
+| Deaths | 4 | 5 | 8 |
+| Alive through fixed horizon | 12 | 11 | 8 |
+| Mid-health center visits | 25 | 15 | 408 |
+| Mid-health empty visits | 79 | 27 | 384 |
+| Direct center-to-empty transitions | 0 | 0 | 96 |
+| Those transitions after a kill in the center window | 0 | 0 | 0 |
+| Longest consecutive mid-health empty run | 24 | 11 | 3 |
+| High-health A-B-A windows | 1 | 1 | 0 |
+| High-health B-A-B windows | 1 | 1 | 0 |
+
+Legacy uses its older scene encoding even where the input text is identical.
+The mechanism passes; **the benefit gate fails**. Mean paired reward change
+is -0.0625, with one improvement, two regressions and thirteen ties. The
+retained parent remains the working player. Both new target reactions persist,
+but shortening the empty-scene run does not improve the episode result.
+Neither parent nor chosen candidate produces the original center-to-empty
+chain in this fresh sample, or in their new selection episodes. This step
+does not demonstrate that the proposed interaction has been resolved.
+
+All three non-tied outcomes begin with a different action from identical raw
+states. Decision indices below are zero-based:
+
+```text
+seed 1504, decision 85: mid-health empty; health 48, ammo 15, kills 6
+  parent: shoot; later low-health strafe and left-side shoot
+          seventh kill at 107, dies at 118
+  candidate: turn_left reveals MarineChainsawVzd id12 on the left
+             later follows a different low-health turning path;
+             no further kills, dies at 113
+
+seed 1508, decision 87: mid-health center; health 60, ammo 12, kills 4
+  parent: move_forward through 93, then strafe_left and empty-scene shoot
+          low-health strafe begins at 120; survives with health 12
+  candidate: turn_right at 87-89 moves id7 to the left; shoot at 90-99
+             another centered turn at 100; health falls, dies at 106
+             neither branch gains another kill
+
+seed 1514, decision 59: mid-health empty; health 56, ammo 18, kills 5
+  parent: shoot through 72; then low-health strafe, survives with five kills
+  candidate: turn_left through 65 reveals id15 on the left
+             subsequent low-health path kills a Demon at 108;
+             survives with six kills and health 12
+```
+
+There are ten first action divergences and six physically identical evaluation
+episodes. Seed 1513 is one of the identical cases: the retained player reaches
+eleven kills with health 30. Its unedited frames at calls 64 and 128 now appear
+near the top of the main README, with byte hashes and provenance in
+[`assets/doom/README.md`](../assets/doom/README.md). Old images remain intact.
+The latest table exposes all three policies, deaths and sample size. The
+retained player's 99 kills on these seeds versus 90 on STEP6's different seeds
+is not evidence of a new improvement.
+
+The parallel bounded review found no demonstrated `wolfe.c` defect explaining
+this path. Ninety-six read-only calls reproduced complete responses after
+reload, reversed query order and interleaving two separate models. Corrections
+persist and rebuild the shared field; activations reset for each call and
+settle recurrently within that decision. This is the implementation's explicit
+construction, not accidentally lost recurrent state. In old seed 1307, identical
+three-token inputs yield identical responses while health falls 54 -> 38 -> 22.
+The adapter omits that change and short history. This establishes information
+compression, not which extra feature would help, nor that the C core is perfect.
+The scoped local notes are in `doom/.build/core-audit-step9.md`; no C edit was
+justified or made during this step.
+
+An independent reader reconstructed **344 episodes and 40,128 decisions**,
+including full C responses, observation/focus, buttons, tic and state continuity,
+returns, all proposal records, control histories, restart, selection ties and
+both comparisons. Its receipt is `runs/joint-mid1/independent-audit.json`.
+All 7,983 prior files in ten sealed directories remain byte-identical, with no
+additions or removals. The core, library, protocol and inherited input hashes
+match the sealed manifest. All proposals and the failed outcome are preserved;
+no runner-up, extra episode set, new feature or next generation was tried.
+
 ## 2026-09-17 — let game outcomes select the mid-health centered-object choice
 
 Oleg authorized publishing the negative STEP7 experiment and continuing.

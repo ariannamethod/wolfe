@@ -1,8 +1,8 @@
 # WOLFE in Doom
 
-The C WOLFE engine now controls a real ViZDoom player through its existing
-tool-calling API. One bounded experiment also selects a persistent memory
-correction using game outcomes. Self-play remains a future research question.
+The C WOLFE engine controls a real ViZDoom player through its existing
+tool-calling API. Bounded experiments select and revisit persistent memory
+corrections using game outcomes. Self-play remains a future research question.
 
 The first recorded episode ended in death: 39 typed calls, 154 game tics,
 zero shots, zero kills. A fixed arbitrary initial policy controlled every
@@ -15,7 +15,7 @@ improved in 14 cases and worsened in two; kills increased from 4 to 19 in total.
 The selected player still died in 14 episodes. This is a small improvement on
 one fixed scenario, under game-provided symbolic perception.
 
-Two actual frames from the later joint-memory experiment are shown in the
+Actual frames from the joint-memory experiments are shown in the
 [main README](../README.md#doom-experiment), with their
 [source episode and hashes](../assets/doom/README.md).
 
@@ -365,5 +365,44 @@ The [log](WOLFEDOOMLOG.md) preserves both divergent histories and all 104
 episodes / 12,748 decisions in `runs/center1/`. The result does not establish
 that centered shooting is generally bad or that the adjacent reactions are
 already the proven cause of both failures.
+
+## Select the mid-health center and empty-scene reactions together
+
+[STEP9.md](STEP9.md) tests their interaction from the retained four-record
+parent. The preceding centered-shoot candidate failed fresh evaluation, so
+it supplies historical evidence without becoming the new parent. The pair
+hypothesis arose from that previous evaluation; new selection and evaluation
+use separate, previously unused seeds.
+
+Preserve the STEP8 source files with the same archive procedure above, using
+`runs/my-center-choice` as `previous`, before editing the shared search driver.
+Then run:
+
+```sh
+.venv/bin/python joint.py --step9 --previous runs/my-center-choice \
+  --legacy-memory runs/my-perception-comparison/memory.json \
+  --output runs/my-mid-health-pair
+```
+
+Each of 36 proposals appends the centered association and replaces the acquired
+empty-scene association in place. The other three records and 22 decisions
+must stay fixed. Game reward selects on 1401–1408, with the parent winning
+ties; only a strict winner surviving restart reaches evaluation on 1501–1516.
+The report keeps the earlier high-health loop counts separate from visits,
+center-to-empty transitions, and consecutive empty-scene runs for this pair.
+Those counts are descriptive and supply no selection bonus. No C change,
+new observation token, or altered reward is part of this step.
+
+The first grid admitted all 36 pairs. Ten tied for the best selection return,
+42 versus the parent's 40. The declared grid order selected centered turn_right
+and empty-scene turn_left; all 24 responses survived restart. Fresh evaluation
+**failed the benefit gate**: reward 95 -> 94, kills 99 -> 99, deaths 4 -> 5;
+one improvement, two regressions, thirteen ties. Shortening the longest empty
+run from 24 to 11 calls did not improve the whole-episode result.
+
+The retained four-correction player remains the working reference. The new
+README frames show that player in seed 1513, with eleven kills and health 30
+at the horizon. All proposals and episodes remain locally in `runs/joint-mid1/`;
+the [log](WOLFEDOOMLOG.md) records the full grid and divergent behavior.
 
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).

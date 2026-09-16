@@ -15,6 +15,37 @@ no training command to discover, and no API secretly doing the work.
 Some problems need a billion parameters. Selecting one of your six functions
 deserves the courtesy of trying something smaller first.
 
+## Doom experiment
+
+**WOLFE already plays Doom.** The same C engine chooses six primitive game
+actions through typed function calls. Game outcomes select persistent example
+corrections; WOLFE rebuilds its field from that memory for subsequent games.
+The [Doom adapter](doom/README.md) supplies game-provided symbolic observations.
+Multiplayer self-play remains unexplored.
+
+Latest evaluation: **16 matched episodes per policy**, seeds 1501–1516.
+
+| Result | Older reference | Retained player | Latest trial |
+| --- | ---: | ---: | ---: |
+| Kills | 17 | **99** | 99 |
+| Deaths | 8 | **4** | 5 |
+| Alive at the fixed horizon | 8 | **12** | 11 |
+
+The older reference uses two acquired corrections and legacy perception;
+the retained player uses four corrections and filtered perception. The latest
+five-record trial failed its benefit gate, so the four-record player remains
+the reference. These are results on one scenario, with at most 128 four-tic
+calls per episode. Full comparisons and failed trials remain in the log.
+
+| After 64 calls: five kills, health 100 | After 128 calls: eleven kills, health 30 |
+| --- | --- |
+| ![WOLFE firing at a centered monster](assets/doom/retained-seed1513-064.png) | ![WOLFE at the horizon after eleven kills](assets/doom/retained-seed1513-128.png) |
+
+New, unedited ViZDoom/Freedoom frames from the retained player, seed 1513.
+This is one successful episode; the final frame reaches the fixed experiment
+horizon, not completion of the game.
+[Frame provenance](assets/doom/README.md) · [Experiment log](doom/WOLFEDOOMLOG.md).
+
 ## Run the wolf
 
 ```sh
@@ -270,26 +301,6 @@ errors, not silent truncation. Definitions are bounded to 4 MiB per file; the
 
 The wolf does not need to know everything. It needs to know which function you
 meant, what belongs in its arguments, and when the evidence is insufficient.
-
-## Doom experiment
-
-[The Doom adapter](doom/README.md) connects the existing C engine to a real
-ViZDoom player through six primitive tools. Bounded experiments select
-persistent example corrections using game reward. A search over 36
-neighboring action pairs raised kills from 24 to 90 on 16 fresh seeds, and
-deaths fell from 13 to 6 against its immediate parent. An older perception
-mode still survived more often, with four deaths on those same seeds.
-The initial prior, raw behavior, and limitations are documented;
-multiplayer self-play remains unexplored.
-
-| After 16 calls: moving left with the monster in view | After 128 calls: eight kills, health 84 |
-| --- | --- |
-| ![WOLFE strafing left past a visible monster](assets/doom/joint-seed914-016.png) | ![WOLFE firing at the end of the recorded episode](assets/doom/joint-seed914-128.png) |
-
-Actual, unedited frames from the same ViZDoom/Freedoom episode, seed 914,
-under the selected four-correction memory. The second frame reaches the
-fixed observation horizon; it is not completion of the game.
-[Frame provenance](assets/doom/README.md) · [Experiment log](doom/WOLFEDOOMLOG.md).
 
 ## Family
 
