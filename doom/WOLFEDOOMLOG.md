@@ -2,6 +2,166 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — let game outcomes select the mid-health centered-object choice
+
+Oleg authorized publishing the negative STEP7 experiment and continuing.
+It was committed and pushed as
+[`b616bb2`](https://github.com/ariannamethod/wolfe/commit/b616bb2e9659ec6aaff60ca6c89aa08505d89769),
+with a unique Quote and Method line. Remote main was checked against that hash.
+The incoming independent audit reproduced NO_ADOPTION, all 56 raw episodes,
+the seven selection totals, and source/state hashes. Its nine exact source
+files were archived in `runs/revision1-source/` before changing the shared
+`revise.py` driver; the previous evidence remains intact.
+
+The next diagnosis read only retained-parent selection seeds 1001–1008.
+Mid-health left has 147 visits in five seeds; mid-health center has 16 in four.
+There are five center-to-left and two left-to-center transitions, but only one
+consecutive left-center-left window and no center-left-center window. This
+does not support a repeated pair oscillation like the STEP6 problem.
+
+The next narrow question is the centered-object choice, currently the initial
+move_forward association. In seed 1006, decisions 107–110 keep Marine id 14 in
+focus with fixed angle 260.15625; its box grows 52×113 -> 174×195 while health
+falls 44 -> 32. Ammo stays 9 and kills 4. Across all 16 centered windows there
+are three ammo decreases, one kill increase and 30 health lost. Window-level
+outcomes do not establish causal credit for the command currently issued.
+
+[STEP8.md](STEP8.md) declares six independently appended fifth corrections for
+`healthmid ammopresent scenecenter`, with all four acquired records and the
+other 23 runtime decisions fixed. No replacement action is prescribed. The
+same episode reward selects on 1201–1208; only a strict winner passing restart
+reaches the parent/child/legacy comparison on 1301–1316. The previous unused
+evaluation seeds 1101–1116 remain unused. This step reuses the search driver
+through explicit `--step8`, preserving the original STEP7 entry point.
+
+Before games, syntax, CLI and whitespace checks passed. A read-only replay
+against the archived STEP7 implementation reproduced eight historical target
+statistics, six full eligibility verdicts, and all seven selection aggregates.
+The new target's historical totals also reproduce 16 visits, three ammo
+decrements, 30 health lost, one kill gained, and maximum consecutive run four.
+An independent reader checked the new mode and original defaults before the
+command was run once:
+
+```sh
+.venv/bin/python revise.py --step8 --previous runs/revision1 \
+  --legacy-memory runs/perception1/memory.json --output runs/center1
+```
+
+All six proposals passed structural eligibility: actual requested target call,
+five exact records containing the original four, zero counters, and the other
+23 decisions fixed. Selection uses only summed episode reward:
+
+| Target action | Reward, 1201–1208 | Kills | Deaths |
+| --- | ---: | ---: | ---: |
+| Parent | 38 | 40 | 2 |
+| turn_left | 40 | 41 | 1 |
+| turn_right | 39 | 41 | 2 |
+| move_forward control | 38 | 40 | 2 |
+| strafe_left | 39 | 41 | 2 |
+| strafe_right | 39 | 40 | 1 |
+| shoot | **41** | 42 | 1 |
+
+Shoot was sealed as the unique maximum. Its state hash is
+`c25d2d2bc5b4f06604cc9a6966923f2a2e446e33892dce76a5f285d8b115a70c`.
+The complete 24-response table survived fresh-process restart, as did the
+structural gate. Only mid-health center changes its emitted call. This proves
+that the fifth association persists; it does not establish a better player.
+
+Fresh evaluation returns:
+
+| Seed | Parent | Selected candidate | Legacy reference |
+| --- | ---: | ---: | ---: |
+| 1301 | 3 | 3 | 1 |
+| 1302 | 6 | 6 | 1 |
+| 1303 | 9 | 9 | 1 |
+| 1304 | 4 | 4 | 1 |
+| 1305 | 3 | 3 | 1 |
+| 1306 | 6 | 4 | 0 |
+| 1307 | 4 | 3 | 0 |
+| 1308 | 5 | 5 | 1 |
+| 1309 | 5 | 5 | 0 |
+| 1310 | 6 | 6 | 1 |
+| 1311 | 6 | 6 | 0 |
+| 1312 | 4 | 4 | 2 |
+| 1313 | 3 | 3 | 1 |
+| 1314 | 5 | 5 | 1 |
+| 1315 | 3 | 3 | 1 |
+| 1316 | 8 | 8 | 1 |
+
+| Aggregate | Parent | Selected candidate | Legacy reference |
+| --- | ---: | ---: | ---: |
+| Reward | 80 | 77 | 13 |
+| Kills | 85 | 84 | 18 |
+| Deaths | 5 | 7 | 5 |
+| Alive through fixed horizon | 11 | 9 | 11 |
+| Target visits | 30 | 41 | 409 |
+| Shoot calls in target | 0 | 41 | 0 |
+| Ammo consumed during target windows | 4 | 15 | 3 |
+| Health lost during target windows | 82 | 80 | 216 |
+| Kills gained during target windows | 3 | 6 | 1 |
+| Longest consecutive target run | 7 | 14 | 16 |
+| High-health A-B-A windows | 2 | 2 | 0 |
+| High-health B-A-B windows | 2 | 2 | 0 |
+
+The mechanism passes; **the benefit gate fails**. Mean paired difference is
+-0.1875: zero improvements, two regressions, fourteen ties. Seven evaluation
+seeds never visit the target under either policy. Both regressions change a
+surviving parent episode into a death. The candidate beats legacy return on
+all 16 seeds (mean +4), but that is not the declared comparison for this new
+change. The current parent also scores far more kills than legacy and has
+the same death count on this sample; changing samples does not establish that
+its earlier survival deficit has been repaired.
+
+Two raw counterexamples begin from identical states in each matched pair:
+
+```text
+seed 1306, decision 102: health 72, ammo 8, kills 4; Marine id 8 centered
+  parent: move_forward, then left-side shoot; kills at 110 and 122
+          survives 128 calls with six kills and health 32
+  candidate: centered shoot for decisions 102–115; kill at 115
+             health 72 -> 32 at 115; dies at 119 with five kills
+
+seed 1307, decision 96: health 74, ammo 13, kills 3; Marine id 9 centered
+  parent: move_forward; kills the Marine at 101, already at health 10
+          low-health empty scene -> strafe_right; survives with four kills
+  candidate: shoot; kills the Marine at 97 with health 54
+             mid-health empty scene -> shoot, then later low-health strafe
+             dies at 114 with the same four kills
+```
+
+The second trace shows an earlier kill followed by a different health-context
+path through existing memories. It does not prove that another isolated or
+joint correction would fix the whole episode. In the first trace, the parent
+and candidate also follow different movement histories after the first call.
+The three-token observation and discrete inherited actions remain limited;
+neither the apparent desirability of shooting nor a local kill count overrides
+the full-episode result.
+
+The two A-B-A windows occur in seeds 1303 (decisions 38–40) and 1304 (40–42),
+with turn_left/strafe_left/turn_left and increasing angle in both policies.
+These context windows recur, but they do not reproduce the old opposite-turn
+oscillation: the strafe holds the angle instead of reversing it. Zero windows
+in STEP6's earlier sample was not a universal guarantee.
+
+The selected candidate remains recorded, but is not promoted as an improved
+replacement. The retained four-correction STEP6 player remains the working
+reference. All 104 episodes and 12,748 decisions remain in `runs/center1/`.
+All 6,909 prior files, including the archived STEP7 sources, remain byte-identical
+with no additions or removals in their sealed directories. Current source,
+protocol and inherited input hashes match the new manifest. No runner-up,
+second context, altered reward, or additional episode set was tried after
+the failed benefit gate.
+
+An independent reader reconstructed all 104 episodes and 12,748 decisions,
+checking full responses, focus/input, buttons, tics, state continuity, returns,
+memory retention, restart and both comparisons. The move_forward control
+reproduces all eight parent selection histories. On the nine evaluation seeds
+that visit the target, the first differing action occurs there from the same
+raw state; the other seven physical histories remain identical. The new
+`independent-audit.json` confirms both regressions and the limited meaning of
+the repeated context windows, with no discrepancies. This completed step is
+prepared for publication under Oleg's granted push authority.
+
 ## 2026-09-17 — revisit the acquired mid-health empty-scene reaction
 
 Oleg authorized publishing STEP6 and two actual screenshots, then continuing

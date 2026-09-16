@@ -311,4 +311,59 @@ memory was adopted and the reserved evaluation seeds were not run. The
 four-correction player from STEP6 remains the selected policy. See the
 [log](WOLFEDOOMLOG.md) for raw sequences and the full selection table.
 
+## Test the mid-health centered-object choice
+
+[STEP8.md](STEP8.md) continues from the retained parent after NO_ADOPTION:
+
+First preserve the exact STEP7 sources alongside its artifacts. Run this before
+editing those sources; the hashes must still match that experiment's manifest:
+
+```sh
+.venv/bin/python - <<'PY'
+import json, shutil
+from pathlib import Path
+from experience import ROOT, digest, write_json
+previous = Path("runs/my-revision")
+sealed = json.loads((previous / "manifest.json").read_text())
+archive = previous.with_name(previous.name + "-source")
+archive.mkdir(exist_ok=False)
+for name, expected in sealed["source_hashes"].items():
+    assert digest(ROOT / name) == expected, name
+    shutil.copyfile(ROOT / name, archive / name)
+write_json(archive / "manifest.json", {
+    "source_hashes": sealed["source_hashes"], "engine": sealed["engine"]})
+PY
+```
+
+Then run the next declared experiment:
+
+```sh
+.venv/bin/python revise.py --step8 --previous runs/my-revision \
+  --legacy-memory runs/my-perception-comparison/memory.json \
+  --output runs/my-center-choice
+```
+
+It uses the parent's old selection trajectories to document a different
+question: should `healthmid ammopresent scenecenter` retain its initial
+move_forward choice? Each of six candidates appends a fifth correction,
+preserving all four acquired records and the other 23 decisions. The same
+search code runs selection on 1201–1208 and, only for a strict winner that
+survives restart, three-way evaluation on 1301–1316. The game reward, perception,
+and horizon are unchanged. The move_forward candidate is the matching control.
+
+The first run selected shoot with 41 reward versus 38 for the parent on the
+eight selection seeds. All five correction records survived restart and the
+other 23 decisions stayed fixed. But the fresh evaluation **failed the benefit
+gate**: reward 80 -> 77, kills 85 -> 84, deaths 5 -> 7; zero improvements,
+two regressions, fourteen ties. The candidate is preserved as evidence, not
+promoted as an improved replacement for the four-correction player.
+
+In one regression the candidate kills an actor earlier, retains mid health,
+and enters the unchanged empty-scene shoot reaction; it later dies. The parent
+kills later at low health, enters its empty-scene strafe reaction, and survives.
+The [log](WOLFEDOOMLOG.md) preserves both divergent histories and all 104
+episodes / 12,748 decisions in `runs/center1/`. The result does not establish
+that centered shooting is generally bad or that the adjacent reactions are
+already the proven cause of both failures.
+
 Environment documentation: [ViZDoom quick start](https://vizdoom.farama.org/introduction/python_quickstart/).
