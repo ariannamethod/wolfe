@@ -1,0 +1,26 @@
+diff --git a/wolfe.c b/wolfe.c
+index 41b1386..8fd2cb3 100644
+--- a/wolfe.c
++++ b/wolfe.c
+@@ -1269,7 +1269,7 @@ static void example_scores(Model *m, Tokens *q, Example *e, double *field, doubl
+         seqtotal += w;
+     }
+     * field = total ? (.78 * matched / total + .22 * qmatch / fmax(qtotal, 1e-9)) : 0;
+-    *attention = total ? (.78 * att / total + .22 * qmatch / fmax(qtotal, 1e-9)) : 0;
++    *attention = total ? (att / total) * (qmatch / fmax(qtotal, 1e-9)) : 0;
+     *order = seqtotal ? seq / seqtotal : 0;
+     *keyword = kt ? km / kt : 0;
+     if (e->synthetic) {
+diff --git a/wolfe.py b/wolfe.py
+index 807b405..b468a84 100644
+--- a/wolfe.py
++++ b/wolfe.py
+@@ -596,7 +596,7 @@ class Wolfe:
+             sequence += weight * best
+             sequence_total += weight
+         field_score = .78 * matched / total + .22 * query_match / max(query_total, 1e-9) if total else 0
+-        neural_attention = .78 * attention / total + .22 * query_match / max(query_total, 1e-9) if total else 0
++        neural_attention = (attention / total) * (query_match / max(query_total, 1e-9)) if total else 0
+         order = sequence / sequence_total if sequence_total else 0
+         keyword = keyword_match / keyword_total if keyword_total else 0
+         if example.synthetic:

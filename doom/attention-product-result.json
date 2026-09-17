@@ -1,0 +1,2167 @@
+{
+  "result": "REJECTED",
+  "production_scorer": "original, restored byte-for-byte",
+  "incoming_commit": "8940f390bc455749bae491dec0448643d8d6bbcf",
+  "games": 0,
+  "formula": "attention = example_squared_coverage * query_coverage",
+  "original_source_sha256": "dea0df2c4f81d64543b927e3f6e4d1a23bdf585500230a135f24a73f20529fda",
+  "candidate_source_sha256": "7f4ff3443d273b90d186b6180d518034870393df3f7112a6093b7fa1d8d0883a",
+  "candidate_python_sha256": "655a0c53c66ff50daeec04680c772ed224e30791220f29313a5abf5fb1e3890b",
+  "candidate_patch_sha256": "37481d817245f86331683c0f828e93b5e7fdf97509981e10b9e07d299ab1e462",
+  "specificity_contracts_sha256": "8dca453342bdf9f9680e10cd3bdb00f35d3219b87c13ec3061b6a380486df2e4",
+  "protocol_sha256": "27ae29c8bbfd0c60c8543aca372eec43d25fc521bc829a870903921e5f5e4280",
+  "specificity": {
+    "query_checks": 64,
+    "original_failed": 8,
+    "candidate_c_failed": 0,
+    "candidate_python_failed": 0,
+    "correction_receipts": 16,
+    "c_python_all_80_outputs_exactly_equal": true
+  },
+  "doom": {
+    "states": 7,
+    "responses_per_state": 48,
+    "parent_choices_unchanged": true,
+    "all_six_requested_targets_realized": true,
+    "all_complete_reloads_equal": true,
+    "all_memories_byte_identical": true,
+    "children": [
+      {
+        "state": "candidate-0-turn_left",
+        "state_sha256": "0a69934564ac5377c6b8bd944a06acfd45b145ff3082df03d919a6fac6f2a73d",
+        "target": {
+          "status": "call",
+          "calls": [
+            {
+              "arguments": {},
+              "name": "turn_left"
+            }
+          ],
+          "confidence": 0.983998
+        },
+        "other_choice_changes": [
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "strafe_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthlow ammopresent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthmid ammoabsent sceneempty damagerecent"
+          }
+        ]
+      },
+      {
+        "state": "candidate-1-turn_right",
+        "state_sha256": "ac62d0465773a1f68c8f81daee1150abfe1db6f02db29935b874a46ba80d91a2",
+        "target": {
+          "status": "call",
+          "calls": [
+            {
+              "arguments": {},
+              "name": "turn_right"
+            }
+          ],
+          "confidence": 0.98391
+        },
+        "other_choice_changes": [
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "strafe_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthlow ammopresent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_left"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthhigh ammopresent sceneempty damagerecent"
+          }
+        ]
+      },
+      {
+        "state": "candidate-2-move_forward",
+        "state_sha256": "d60fe5619e4a797153284f003a73439dad8722a3ffd35d7ccad7899f853b95d4",
+        "target": {
+          "status": "call",
+          "calls": [
+            {
+              "arguments": {},
+              "name": "move_forward"
+            }
+          ],
+          "confidence": 0.983666
+        },
+        "other_choice_changes": [
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "strafe_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthlow ammopresent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthmid ammoabsent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_left"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthhigh ammopresent sceneempty damagerecent"
+          }
+        ]
+      },
+      {
+        "state": "candidate-3-strafe_left",
+        "state_sha256": "d861c24fca00239de5fdd9fc1e9152c65e59b3fba1a3685b0283ce1a4d7970d9",
+        "target": {
+          "status": "call",
+          "calls": [
+            {
+              "arguments": {},
+              "name": "strafe_left"
+            }
+          ],
+          "confidence": 0.983854
+        },
+        "other_choice_changes": [
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "strafe_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthlow ammopresent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthmid ammoabsent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_left"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthhigh ammopresent sceneempty damagerecent"
+          }
+        ]
+      },
+      {
+        "state": "candidate-4-strafe_right",
+        "state_sha256": "972577ff08859952ab32eb3d060509e89b95a2f897dbeeedd736eb1fddd6474c",
+        "target": {
+          "status": "call",
+          "calls": [
+            {
+              "arguments": {},
+              "name": "strafe_right"
+            }
+          ],
+          "confidence": 0.983792
+        },
+        "other_choice_changes": [
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthmid ammoabsent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_left"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthhigh ammopresent sceneempty damagerecent"
+          }
+        ]
+      },
+      {
+        "state": "candidate-5-shoot",
+        "state_sha256": "2e537751d079dc3a4a2ffff83bed26bd28d0e1a0bf21045caeaa3a4e42e6ca11",
+        "target": {
+          "status": "call",
+          "calls": [
+            {
+              "arguments": {},
+              "name": "shoot"
+            }
+          ],
+          "confidence": 0.984579
+        },
+        "other_choice_changes": [
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "strafe_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthlow ammopresent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_right"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthmid ammoabsent sceneempty damagerecent"
+          },
+          {
+            "actual": {
+              "calls": [],
+              "status": "ambiguous"
+            },
+            "expected": {
+              "calls": [
+                {
+                  "arguments": {},
+                  "name": "turn_left"
+                }
+              ],
+              "status": "call"
+            },
+            "input": "healthhigh ammopresent sceneempty damagerecent"
+          }
+        ]
+      }
+    ]
+  },
+  "fixtures": {
+    "gate": "no previously correct neural fixture becomes incorrect",
+    "sets": {
+      "heldout": {
+        "requests": 119,
+        "old_correct": 117,
+        "new_correct": 99,
+        "transitions": {
+          "correct_correct": 99,
+          "correct_incorrect": 18,
+          "incorrect_correct": 0,
+          "incorrect_incorrect": 2
+        }
+      },
+      "final_holdout": {
+        "requests": 24,
+        "old_correct": 24,
+        "new_correct": 21,
+        "transitions": {
+          "correct_correct": 21,
+          "correct_incorrect": 3,
+          "incorrect_correct": 0,
+          "incorrect_incorrect": 0
+        }
+      },
+      "confirmation_holdout": {
+        "requests": 32,
+        "old_correct": 32,
+        "new_correct": 22,
+        "transitions": {
+          "correct_correct": 22,
+          "correct_incorrect": 10,
+          "incorrect_correct": 0,
+          "incorrect_incorrect": 0
+        }
+      },
+      "v2_engineering": {
+        "requests": 80,
+        "old_correct": 74,
+        "new_correct": 70,
+        "transitions": {
+          "correct_correct": 67,
+          "correct_incorrect": 7,
+          "incorrect_correct": 3,
+          "incorrect_incorrect": 3
+        }
+      },
+      "v2_blind": {
+        "requests": 48,
+        "old_correct": 44,
+        "new_correct": 39,
+        "transitions": {
+          "correct_correct": 37,
+          "correct_incorrect": 7,
+          "incorrect_correct": 2,
+          "incorrect_incorrect": 2
+        }
+      }
+    },
+    "old_correct": 291,
+    "new_correct": 251,
+    "regression_count": 45,
+    "improvement_count": 5,
+    "passed": false
+  },
+  "regressions": [
+    {
+      "fixture": "heldout.jsonl",
+      "line": 7,
+      "text": "I need a weather report for Dakar.",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Dakar",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Dakar",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.923713
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.318018
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 16,
+      "text": "Do I need an umbrella in London?",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "London",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "London",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.85262
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.579594
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 22,
+      "text": "Please start a 25-minute timer.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 1500
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 1500
+            }
+          }
+        ],
+        "confidence": 0.938707
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.588499
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 25,
+      "text": "Start a timer for one hour.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 3600
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 3600
+            }
+          }
+        ],
+        "confidence": 0.926933
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.477914
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 28,
+      "text": "Start a timer for two minutes and ten seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 130
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 130
+            }
+          }
+        ],
+        "confidence": 0.922214
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.321629
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 29,
+      "text": "Set a timer for 1 hour and 15 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 4500
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 4500
+            }
+          }
+        ],
+        "confidence": 0.931912
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.320781
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 30,
+      "text": "Run a countdown for 75 seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 75
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 75
+            }
+          }
+        ],
+        "confidence": 0.857271
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.149812
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 33,
+      "text": "The pasta is in the pot. Set a timer for 9 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 540
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 540
+            }
+          }
+        ],
+        "confidence": 0.946663
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.061096
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 34,
+      "text": "I have 3 eggs. Set a timer for 6 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 360
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 360
+            }
+          }
+        ],
+        "confidence": 0.946663
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.065595
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 35,
+      "text": "Set a 2-minute timer; my room number is 308.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 120
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 120
+            }
+          }
+        ],
+        "confidence": 0.937924
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.550329
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 36,
+      "text": "Start a timer for thirty-five seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 35
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 35
+            }
+          }
+        ],
+        "confidence": 0.93066
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.494143
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 55,
+      "text": "Play some jazz.",
+      "expected": {
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "jazz"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "jazz"
+            }
+          }
+        ],
+        "confidence": 0.935487
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.358318
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 63,
+      "text": "Please play the track \"One More Time\".",
+      "expected": {
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "One More Time"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "One More Time"
+            }
+          }
+        ],
+        "confidence": 0.929782
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.302494
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 76,
+      "text": "Write a note saying \"Check the bicycle brakes\".",
+      "expected": {
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "Check the bicycle brakes"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "Check the bicycle brakes"
+            }
+          }
+        ],
+        "confidence": 0.904288
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.5061
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 81,
+      "text": "Create a note with the text \"Pause the music\".",
+      "expected": {
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "Pause the music"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "Pause the music"
+            }
+          }
+        ],
+        "confidence": 0.903008
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.456861
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 82,
+      "text": "Write a note: set a timer for 5 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "set a timer for 5 minutes"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "set a timer for 5 minutes"
+            }
+          }
+        ],
+        "confidence": 0.916504
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.255952
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 109,
+      "text": "Start a timer for a while.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "missing_arguments"
+        ]
+      },
+      "before": {
+        "status": "missing_arguments",
+        "calls": [],
+        "confidence": 0.941908
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.598244
+      }
+    },
+    {
+      "fixture": "heldout.jsonl",
+      "line": 114,
+      "text": "Cancel the timer and create a note: buy coffee.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "ambiguous",
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "ambiguous",
+        "calls": [],
+        "confidence": 0.931797
+      },
+      "after": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "confidence": 0.970953
+      }
+    },
+    {
+      "fixture": "final_holdout.jsonl",
+      "line": 6,
+      "text": "I have 12 guests. Start a timer for 40 seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 40
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 40
+            }
+          }
+        ],
+        "confidence": 0.945685
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.06587
+      }
+    },
+    {
+      "fixture": "final_holdout.jsonl",
+      "line": 8,
+      "text": "Stop the running timer.",
+      "expected": {
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "confidence": 0.828928
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.521696
+      }
+    },
+    {
+      "fixture": "final_holdout.jsonl",
+      "line": 16,
+      "text": "Write a note: play music after dinner.",
+      "expected": {
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "play music after dinner"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "play music after dinner"
+            }
+          }
+        ],
+        "confidence": 0.916741
+      },
+      "after": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "music after dinner"
+            }
+          }
+        ],
+        "confidence": 0.939592
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 3,
+      "text": "How hot is it in Marrakesh?",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Marrakesh",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Marrakesh",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.770077
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.622227
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 4,
+      "text": "Check the temperature in Zagreb using Celsius.",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Zagreb",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Zagreb",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.907831
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.609904
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 6,
+      "text": "Start a timer for twenty-two minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 1320
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 1320
+            }
+          }
+        ],
+        "confidence": 0.925651
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.311853
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 7,
+      "text": "I am baking bread. Set a timer for 1 hour and 40 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 6000
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 6000
+            }
+          }
+        ],
+        "confidence": 0.931912
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.055199
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 11,
+      "text": "Could you play the track \"Space Oddity\"?",
+      "expected": {
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "Space Oddity"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "Space Oddity"
+            }
+          }
+        ],
+        "confidence": 0.930779
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.316088
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 14,
+      "text": "Write a note saying \"Pick up the repaired guitar\".",
+      "expected": {
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "Pick up the repaired guitar"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "create_note",
+            "arguments": {
+              "text": "Pick up the repaired guitar"
+            }
+          }
+        ],
+        "confidence": 0.904283
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.506002
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 18,
+      "text": "Please end the timer.",
+      "expected": {
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "confidence": 0.725811
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.343896
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 28,
+      "text": "I would like to set a timer.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "missing_arguments"
+        ]
+      },
+      "before": {
+        "status": "missing_arguments",
+        "calls": [],
+        "confidence": 0.651446
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.597825
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 30,
+      "text": "Set a timer for 14 minutes and pause the music.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "ambiguous",
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "ambiguous",
+        "calls": [],
+        "confidence": 0.920739
+      },
+      "after": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "pause_music",
+            "arguments": {}
+          }
+        ],
+        "confidence": 0.971291
+      }
+    },
+    {
+      "fixture": "confirmation_holdout.jsonl",
+      "line": 31,
+      "text": "Play \"The Passenger\" and cancel the timer.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "ambiguous",
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "ambiguous",
+        "calls": [],
+        "confidence": 0.948314
+      },
+      "after": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "confidence": 0.77073
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 25,
+      "text": "Would you play jazz?",
+      "expected": {
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "jazz"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "play_music",
+            "arguments": {
+              "query": "jazz"
+            }
+          }
+        ],
+        "confidence": 0.933738
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.32923
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 29,
+      "text": "I'd like you to set a timer for 2 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 120
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 120
+            }
+          }
+        ],
+        "confidence": 0.945999
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.620456
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 31,
+      "text": "Can you get the current weather for Busan?",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Busan",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Busan",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.895832
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.497749
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 47,
+      "text": "Set a countdown for one minute and fifteen seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 75
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 75
+            }
+          }
+        ],
+        "confidence": 0.848697
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.191811
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 49,
+      "text": "Set a 25-minute timer for the pasta.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 1500
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 1500
+            }
+          }
+        ],
+        "confidence": 0.944488
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.607765
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 60,
+      "text": "Dinner is ready; cancel the active timer.",
+      "expected": {
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "cancel_timer",
+            "arguments": {}
+          }
+        ],
+        "confidence": 0.948105
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.078909
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 76,
+      "text": "Get the current weather, please.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "missing_arguments"
+        ]
+      },
+      "before": {
+        "status": "missing_arguments",
+        "calls": [],
+        "confidence": 0.87456
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.517669
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 1,
+      "text": "Please check the current weather for Durban.",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Durban",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Durban",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.895495
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.403747
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 2,
+      "text": "How is the weather in Québec City?",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Québec City",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Québec City",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.867529
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.283735
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 6,
+      "text": "The taxi arrives at 9; get the weather in Tbilisi.",
+      "expected": {
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Tbilisi",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Tbilisi",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.884923
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.62013
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 8,
+      "text": "Start a countdown for twenty seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 20
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 20
+            }
+          }
+        ],
+        "confidence": 0.849531
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.134518
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 10,
+      "text": "Set a timer for two minutes and five seconds.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 125
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 125
+            }
+          }
+        ],
+        "confidence": 0.935746
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.376554
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 11,
+      "text": "I have 3 trays ready; set a timer for 14 minutes.",
+      "expected": {
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 840
+            }
+          }
+        ],
+        "allowed_status": [
+          "call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 840
+            }
+          }
+        ],
+        "confidence": 0.946663
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.065258
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 48,
+      "text": "Get the weather in Kumasi and start a timer for 50 seconds.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "ambiguous"
+        ]
+      },
+      "before": {
+        "status": "ambiguous",
+        "calls": [],
+        "confidence": 0.910031
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.168634
+      }
+    }
+  ],
+  "improvements": [
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 32,
+      "text": "Can you explain how weather forecasts work?",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "missing_arguments",
+        "calls": [],
+        "confidence": 0.818654
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.309261
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 40,
+      "text": "For Reykjavík, the weather report was inaccurate.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Reykjavík",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.90946
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.27746
+      }
+    },
+    {
+      "fixture": "v2_engineering.jsonl",
+      "line": 65,
+      "text": "The timer has 25 seconds left.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "set_timer",
+            "arguments": {
+              "seconds": 25
+            }
+          }
+        ],
+        "confidence": 0.697047
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.230118
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 37,
+      "text": "There is no need to get the weather in Bologna.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "call",
+        "calls": [
+          {
+            "name": "get_weather",
+            "arguments": {
+              "city": "Bologna",
+              "unit": "celsius"
+            }
+          }
+        ],
+        "confidence": 0.871129
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.190718
+      }
+    },
+    {
+      "fixture": "v2_blind.jsonl",
+      "line": 39,
+      "text": "I want to learn how a countdown timer is built.",
+      "expected": {
+        "calls": [],
+        "allowed_status": [
+          "no_call"
+        ]
+      },
+      "before": {
+        "status": "missing_arguments",
+        "calls": [],
+        "confidence": 0.897216
+      },
+      "after": {
+        "status": "no_call",
+        "calls": [],
+        "confidence": 0.206977
+      }
+    }
+  ],
+  "existing_contracts": {
+    "original_make_test_exit": 0,
+    "candidate_make_test_exit": 2,
+    "new_failures_both_engines": [
+      "custom_contracts: send package to Rue des Lilas 12",
+      "semantic_contracts: I am baking bread. Set a timer for 1 hour and 40 minutes."
+    ],
+    "fuzz_valid_responses": 512,
+    "fuzz_expected_bounded_rejections": 17,
+    "state_interchange_assertions": 115
+  },
+  "parity": {
+    "comparisons": 2727,
+    "responses": 5454,
+    "within_fixed_tolerance": 2721,
+    "passed": false,
+    "configurations": {
+      "neural-full": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 302
+      },
+      "field-full": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 302
+      },
+      "keyword-full": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 302
+      },
+      "neural-compact": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 302
+      },
+      "field-compact": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 302
+      },
+      "keyword-compact": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 302
+      },
+      "neural-off": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 303
+      },
+      "field-off": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 303
+      },
+      "keyword-off": {
+        "requests": 303,
+        "full_json_matches_within_tolerance": 303
+      }
+    },
+    "preexisting_discrepancy": {
+      "fixture": "v2_engineering.jsonl",
+      "line": 58,
+      "text": "Please save this as a note: turn left at Café René",
+      "path": "$.reasoning.arguments[0].evidence",
+      "c": 2.401688,
+      "python": 2.401687,
+      "absolute_tolerance": 1e-06,
+      "affected_configurations": "full/compact reasoning in all three modes",
+      "reproduced_in_original": true,
+      "calls_and_status_equal": true
+    }
+  },
+  "local_evidence_root": "doom/runs/core1",
+  "receipts_sha256": {
+    "baseline-inputs.json": "91fad6aff0089c8ec917b2ff84e2fcd885c061bebb273b2cfb212daa72e6c0e2",
+    "before/contracts.log": "40beef477cc39bab688cf3b1b6022ca5849dc3c4fe2c848edf865cafe3993cec",
+    "before/specificity.json": "e640969a963bc746e4d2552f32a6094430ba8810f739659c7e2832c101a8f780",
+    "before/fixture-baseline.json": "41ca86e476d456db774d77fc3a05490a76e59196190f5089592e492377fc33b8",
+    "before/parity-counterexample-baseline.json": "2e91d8ff5957d439e1ec3b1d7b9afedef35fbaa14c04be2b3c2ab42789b958c7",
+    "after/contracts.log": "f7f1774d292f6f389e4c3191155f35c476c2b51192c3958c0e5ed97cf13d11ce",
+    "after/doom-gate.json": "de71c7f27e3a64e1c31ec8f3744b68644ae258c4ac246bc08d6d06d61cbe7bff",
+    "after/fixture-comparison.json": "7a185ed1a50ff4ca998e6edc4af28a48e5a5fd91c7d5ebfaed7043197d21ad19",
+    "after/specificity-c.json": "c24a6ad320f9d8a9873d297a295c18f2f6185214d5aba418cedaef655f5d4d95",
+    "after/specificity-python.json": "2798afb41af58634d2cf85461a8f19090154379cbac9f532d537013f8b65e39b",
+    "after/parity-independent.json": "f0c47f86891a86f7a6d1992acf24b3b33005a44e44e8a85af87f1dafcd35b9e8",
+    "after/remaining-contracts/c-summary.json": "1130a8bddbb2ebbf4d52bebdfeaa872f4c2bdd613cad19aa92fb3f1f4dd16cca",
+    "after/remaining-contracts/python-summary.json": "df787589e95109005a4d8767f0d99ea590195d8c0d4f592366ed1ba88ac30f45",
+    "after/remaining-contracts/interop-summary.json": "3305df622a136d0731f6510f3293f7b71d1a770f0b4765a206170c3b4a7af668",
+    "check_doom.py": "e94b06e86cc245d7a88feec3b4f879b4217630c61bb93ee5f9591635398cf0be",
+    "check_doom-malformed-batch.py": "db6042b6f243e96e83a5ba289a5baa0efe9689fda9a61abd953d65e409e04efd",
+    "independent-audit.json": "9b578d782626e8621abe03d3870a8956c22fe96c8e8045702e61852ff0e4806e",
+    "after/fixture-independent-audit.json": "78937df2c251cae7d3f458ec0ba578bc4746369ab592e74839eae5fd4af48f11",
+    "restoration.json": "4061f2f53ca894a6407b8ba177a7418806504da51f9fd177f241dfc3f023efcc"
+  },
+  "harness_repair": "Initial reload passed plain text to JSONL batch and got malformed JSON. Both attempt and output preserved; corrected object JSONL reproduces all 336 complete API responses.",
+  "restoration": {
+    "prior_files": 11553,
+    "sealed_roots": 14,
+    "files_unchanged": true,
+    "all_original_26_sources_unchanged": true,
+    "doom_library_unchanged": true
+  }
+}

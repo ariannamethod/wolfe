@@ -450,3 +450,27 @@ This result identifies a limit of one added condition alongside the retained
 general association; it does not measure a gameplay benefit or prove that
 short history cannot help. The [log](WOLFEDOOMLOG.md) records exact activations
 and the unchanged ambiguity conditions.
+
+## Test a stricter content-attention rule
+
+[STEP11.md](STEP11.md) tests one C/Python scoring change against the six frozen
+STEP10 memories and the existing general tool-calling fixtures. Multiplying
+example coverage by query coverage makes all six requested conditional actions
+callable, but each child also loses two or three other choices to ambiguity.
+General correctness falls from 291 to 251 of 303 cases, with 45 new errors and
+five improvements. **The change is rejected; the production scorer is restored.**
+
+The [rejected patch](attention-product.patch),
+[individual results](attention-product-result.json), and
+[neutral specificity contracts](specificity_contracts.py) preserve the attempt.
+Those experimental contracts expose eight known failures in the retained core;
+they are intentionally separate from `make test`. After compiling the CLI,
+`python3 doom/specificity_contracts.py --engine ./wolfe` runs them from the repo
+root. The rejected candidate passes those narrow contracts but fails the wider
+gate. Full local responses and both implementations remain in `runs/core1/`.
+
+No new games or screenshots were produced. The retained player, six actions,
+memory and published kill/survival totals are unchanged. More tools could add
+simultaneous movement and firing, but this experiment addresses ambiguity
+between actions that already exist. See the [log](WOLFEDOOMLOG.md) for actual
+before/after calls and the independent checks.

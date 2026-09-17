@@ -2,6 +2,138 @@
 
 Newest entries first. Preserve failed episodes and their actual outcomes.
 
+## 2026-09-17 — reject a global attention-product change
+
+Incoming main is
+[`8940f39`](https://github.com/ariannamethod/wolfe/commit/8940f390bc455749bae491dec0448643d8d6bbcf).
+The original library reproduced all 336 STEP10 responses exactly. The initial
+audit confirmed five ambiguous alternatives, one eligible shoot control and
+zero games. Eleven STEP10 sources were archived before this experiment;
+the incoming inventory covers 11,553 files in fourteen historical directories.
+
+Oleg suggested more available functions. The C engine supports up to 64 tools;
+the Doom adapter currently maps six tools to six individual buttons. Additional
+actions could expose useful combinations, such as firing while strafing.
+However, each blocked STEP10 action already ranks first. Adding definitions
+would also change the field and state identity, so this turn isolates the
+existing scoring limitation while retaining the same six actions.
+
+[STEP11.md](STEP11.md) declares one formula before core edits or new results.
+Only neural content attention changes, identically in C and Python:
+
+```text
+before: 0.78 * example_squared_coverage + 0.22 * query_coverage
+trial:  example_squared_coverage * query_coverage
+```
+
+Field-mode scores, ordered-pair evidence, role and negation handling, recurrent
+steps, reliability, abstention thresholds and all input files stay fixed.
+There is no Doom token, correction privilege or literal-match override in the
+patch. No second coefficient or formula is tried after the result.
+
+The independent neutral contract uses two zero-argument tools, a broad
+`sort cobalt parcel` example and a `sort cobalt parcel urgent` correction.
+Eight permutations reverse tool order, example order and action labels. The
+old implementation fails the qualified action in all eight; the trial passes
+all 64 query checks in both languages. Broad and unrelated calls, unknown and
+quoted additions, equal conflicts, omitted qualifiers and a null correction
+retain their declared behavior. All 80 parsed C/Python outputs, including the
+16 correction receipts, match exactly. The test and its fixtures were fixed
+before either outcome.
+
+Raw qualified behavior in the first neutral fixture:
+
+```text
+sort cobalt parcel urgent
+  original: {"calls":[],"status":"ambiguous","confidence":0.982558}
+  trial:    {"calls":[{"name":"violet","arguments":{}}],"status":"call","confidence":0.982813}
+```
+
+These excerpts omit reasoning but retain the returned decision and activation.
+The Doom target also becomes callable in every sealed child:
+
+| Requested action | Trial target activation | Other choices lost |
+| --- | ---: | ---: |
+| turn_left | 0.983998 | 2 |
+| turn_right | 0.983910 | 2 |
+| move_forward | 0.983666 | 3 |
+| strafe_left | 0.983854 | 3 |
+| strafe_right | 0.983792 | 2 |
+| shoot control | 0.984579 | 3 |
+
+The retained parent's 48 choices are unchanged. Each child, however, now
+returns ambiguous for two or three other flagged inputs. For example, in the
+turn_left child:
+
+```text
+healthmid ammopresent sceneempty damagerecent
+  original: ambiguous, []
+  trial:    call turn_left {}
+healthlow ammopresent sceneempty damagerecent
+  original: call strafe_right {}
+  trial:    ambiguous, []
+```
+
+All seven state files remain byte-identical, and all 336 trial responses match
+their fresh-process reloads completely. The first reload harness incorrectly
+sent plain text to the JSONL batch interface; its malformed-JSON outputs and
+source are preserved separately. Correcting only that invocation to objects
+with a `text` key yields the complete matches. The collateral choice changes
+are genuine behavior of the declared formula, not this harness error.
+
+The general fixture gate independently fails:
+
+| Frozen fixture set | Original correct | Trial correct | Newly incorrect |
+| --- | ---: | ---: | ---: |
+| heldout | 117/119 | 99/119 | 18 |
+| final_holdout | 24/24 | 21/24 | 3 |
+| confirmation_holdout | 32/32 | 22/32 | 10 |
+| v2_engineering | 74/80 | 70/80 | 7 |
+| v2_blind | 44/48 | 39/48 | 7 |
+
+Total: **291 -> 251 correct out of 303**, with 45 regressions and five
+improvements. The wider result is not just reduced willingness to call:
+
+```text
+Play some jazz.
+  original: call play_music {"query":"jazz"}, confidence 0.935487
+  trial:    no_call [], confidence 0.358318
+Write a note: play music after dinner.
+  original: call create_note {"text":"play music after dinner"}, confidence 0.916741
+  trial:    call play_music {"query":"music after dinner"}, confidence 0.939592
+Set a timer for 14 minutes and pause the music.
+  original: ambiguous [], confidence 0.920739
+  trial:    call pause_music {}, confidence 0.971291
+```
+
+The original `make test` passes. The candidate fails existing custom and
+semantic contracts in both implementations: a package address and a compound
+timer request lose their calls. Remaining declared contracts pass, including
+embedding, 512 seeded fuzz responses and 115 state-interchange assertions.
+No failed fixture or expected output is changed.
+
+Full C/Python parity compares 2,727 pairs: 303 requests across three modes and
+three reasoning settings. It passes 2,721 under the unchanged 1e-6 tolerance.
+The six discrepancies repeat one existing numerical boundary at engineering
+row 58: argument evidence 2.401688 versus 2.401687 has a binary float difference
+slightly above 1e-6. Twelve bounded original-engine calls reproduce the same
+discrepancy in all six configurations; calls and status agree. This pre-existing
+issue is recorded separately from the trial's 45 new behavioral errors.
+
+Result: **REJECTED; zero games**. Production `wolfe.c`, `wolfe.py` and Makefile
+are restored exactly. The original Doom library and retained four-record
+memory remain in place. The patch, experimental test and every changed fixture
+decision are published alongside this log; full source snapshots, raw outputs,
+binaries and receipts remain in `runs/core1/`. The narrow specificity success
+does not establish a usable general scorer or improved Doom play. This turn
+returns to Oleg without another formula, new tools or a gameplay phase.
+
+The independent audit reconstructs the table and fixture comparisons from raw
+outputs and separately reproduces four before/after pairs with the archived
+binaries. It confirms all six target calls, every collateral Doom change and
+the exact 45 regression rows. Its receipt is `runs/core1/independent-audit.json`;
+the separate fixture/parity audit is `runs/core1/after/fixture-independent-audit.json`.
+
 ## 2026-09-17 — distinguish one already-observed health decrease
 
 Oleg authorized the next turn after
