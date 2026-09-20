@@ -173,9 +173,31 @@ Off by default. Two ways to turn it on:
 
 Compact mode shows the winning function, matched words, argument values and
 sources, and the winning margin. Here the evidence is `play`, `music`, `by`;
-`Portishead` comes from input bytes `[14,24]`. Full mode adds all tool candidates,
-related examples, ordered-pair evidence, the activation trajectory, and competing
-argument scores. Absent required arguments have their own diagnostics.
+`Portishead` comes from input bytes `[14,24]`.
+
+An abridged view of that same decision looks like this:
+
+```json
+{
+  "calls": [{"name": "play_music", "arguments": {"query": "Portishead"}}],
+  "status": "call",
+  "confidence": 0.984372,
+  "reasoning": {
+    "mode": "neural",
+    "winner": "play_music",
+    "evidence": ["play", "music", "by"],
+    "arguments": [
+      {"name": "query", "value": "Portishead", "source": "input", "span": [14, 24]}
+    ]
+  }
+}
+```
+
+Full mode opens the mechanism further: all tool candidates, related examples,
+ordered-pair evidence, the recurrent activation trajectory, competing argument
+scores, and diagnostics for absent required arguments. It is less a narrated
+chain of thought than a window into the computation WOLFE actually used to
+settle on the call.
 
 These are computed observations. No extra model writes a story about them.
 Both options leave the selected call unchanged. Span offsets are UTF-8 **bytes**.
